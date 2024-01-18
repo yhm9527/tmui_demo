@@ -27,6 +27,13 @@
 				"navigationStyle": "custom"
 			}
 		},
+        {
+			"path": "pages/demo/demo",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom"
+			}
+		},
 		{
             "path": "pages/index/index",
             "style": {
