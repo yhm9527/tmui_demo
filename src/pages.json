@@ -42,7 +42,14 @@
                 "titlePenetrate": "YES",
                 "transparentTitle": "always"
             }
-        }
+        },
+        {
+			"path": "pages/takeStock/takeStock",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom"
+			}
+		}
     ],
     "globalStyle": {
         "navigationBarTextStyle": "black",

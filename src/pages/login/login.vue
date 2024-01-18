@@ -2,8 +2,8 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-09 10:57:44
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-18 17:33:34
- * @FilePath: \tmui_cli_demo\src\pages\login\login.vue
+ * @LastEditTime: 2024-01-18 21:27:54
+ * @FilePath: \tmui_demo\src\pages\login\login.vue
  * @Description:
  *
  * Copyright (c) 2024 by 2483677516@qq.com, All Rights Reserved.
@@ -11,7 +11,7 @@
 <script setup lang="ts">
     import { ref, reactive, computed, onMounted, watchEffect } from "vue"
     import { useFetch } from "@/tmui/tool/useFun/useFetch"
-    import { DEFAULT_API } from "@/common/config"
+    import { DEFAULT_API, DEFAULT_FETCH_CONFIG } from "@/common/config"
     import tmMessage from "@/tmui/components/tm-message/tm-message.vue"
     // 禁用登录按钮
     const loginDisabled = ref(true)
@@ -20,33 +20,61 @@
         return showPassword.value ? "text" : "password"
     })
 
-    console.log(DEFAULT_API);
+    console.log(DEFAULT_API)
 
     onMounted(() => {
         // 验证当前设备是否可用
     })
 
     const loginFormData = reactive({
-        dydm: "0020",
-        pasword: "123",
+        dydm: "",
+        pasword: "",
     })
 
+    // #ifdef H5
+    loginFormData.dydm = "1898"
+    loginFormData.pasword = "123"
+    // #endif
+
     watchEffect(() => {
-        loginDisabled.value =
-            !loginFormData.dydm || !loginFormData.pasword
+        loginDisabled.value = !loginFormData.dydm || !loginFormData.pasword
     })
 
     const msg = ref<InstanceType<typeof tmMessage> | null>(null)
 
-    const { error, data, getData } = useFetch(DEFAULT_API+"/Jcinfo/Logindy", {
-        method: "GET",
+    const {
+        loading: loginLoading,
+        data: loginData,
+        getData,
+    } = useFetch(DEFAULT_API + "/Jcinfo/Logindy", {
+        ...DEFAULT_FETCH_CONFIG,
         data: loginFormData,
-        toastKey: "msg",
     })
 
-    const login = () => {
-        getData()
-        // uni.navigateTo({ url: "/pages/index/index" })
+    watchEffect(() => {
+        if (loginLoading.value) {
+            uni.showLoading({ title: "登录中..." })
+        } else {
+            uni.hideLoading()
+        }
+    })
+
+    const login = async () => {
+        await getData()
+        if (loginData.value.status != 200) {
+            // 登录失败
+            msg.value?.show({ model: "error", text: loginData.value.msg })
+            setTimeout(()=>{
+                uni.reLaunch({ url: "/pages/index/index" })
+            },1300)
+            return
+        }else{
+            msg.value?.show({ model: "success", text: loginData.value.msg })
+            setTimeout(()=>{
+                uni.reLaunch({ url: "/pages/index/index" })
+            },1300)
+        }
+
     }
 </script>
 <script lang="ts">
