@@ -2,8 +2,8 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-09 10:57:44
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-17 23:24:50
- * @FilePath: \tmui_demo\src\pages\login\login.vue
+ * @LastEditTime: 2024-01-18 17:33:34
+ * @FilePath: \tmui_cli_demo\src\pages\login\login.vue
  * @Description:
  *
  * Copyright (c) 2024 by 2483677516@qq.com, All Rights Reserved.
@@ -11,6 +11,7 @@
 <script setup lang="ts">
     import { ref, reactive, computed, onMounted, watchEffect } from "vue"
     import { useFetch } from "@/tmui/tool/useFun/useFetch"
+    import { DEFAULT_API } from "@/common/config"
     import tmMessage from "@/tmui/components/tm-message/tm-message.vue"
     // 禁用登录按钮
     const loginDisabled = ref(true)
@@ -18,6 +19,8 @@
     const passwordType = computed<any>(() => {
         return showPassword.value ? "text" : "password"
     })
+
+    console.log(DEFAULT_API);
 
     onMounted(() => {
         // 验证当前设备是否可用
@@ -35,9 +38,10 @@
 
     const msg = ref<InstanceType<typeof tmMessage> | null>(null)
 
-    const { error, data, getData } = useFetch("/api/Jcinfo/Logindy", {
+    const { error, data, getData } = useFetch(DEFAULT_API+"/Jcinfo/Logindy", {
         method: "GET",
         data: loginFormData,
+        toastKey: "msg",
     })
 
     const login = () => {
