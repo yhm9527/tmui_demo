@@ -1,3 +1,13 @@
+/*
+ * @Author: leslie 2483677516@qq.com
+ * @Date: 2024-01-17 21:07:25
+ * @LastEditors: leslie 2483677516@qq.com
+ * @LastEditTime: 2024-01-17 22:50:44
+ * @FilePath: \tmui_demo\vite.config.ts
+ * @Description:
+ *
+ * Copyright (c) 2024 by 2483677516@qq.com, All Rights Reserved.
+ */
 import { defineConfig } from "vite";
 import uni from "@dcloudio/vite-plugin-uni";
 import vueJsx from "@vitejs/plugin-vue-jsx";
@@ -18,12 +28,11 @@ export default defineConfig({
 	},
 	server: {
 		port: 1314,
-		// 选项写法
 		proxy: {
-			'/pag': {
-				target: 'https://cdn.tmui.design',
+			'/api': {
+				target: 'https://xxcx.myhxsmbh.com:4438/api',
 				changeOrigin: true,
-				rewrite: (path) => path.replace(/^\/api/, '/api')
+				rewrite: (path) => path.replace(/^\/api/, ''),
 			},
 		}
 	},

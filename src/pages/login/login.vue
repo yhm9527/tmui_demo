@@ -2,30 +2,47 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-09 10:57:44
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-09 15:37:14
- * @FilePath: \tmui_cli_demo\src\pages\login\login.vue
+ * @LastEditTime: 2024-01-17 23:24:50
+ * @FilePath: \tmui_demo\src\pages\login\login.vue
  * @Description:
  *
  * Copyright (c) 2024 by 2483677516@qq.com, All Rights Reserved.
 -->
 <script setup lang="ts">
-    import { ref,computed } from "vue"
+    import { ref, reactive, computed, onMounted, watchEffect } from "vue"
+    import { useFetch } from "@/tmui/tool/useFun/useFetch"
     import tmMessage from "@/tmui/components/tm-message/tm-message.vue"
+    // 禁用登录按钮
+    const loginDisabled = ref(true)
     const showPassword = ref(false)
     const passwordType = computed<any>(() => {
         return showPassword.value ? "text" : "password"
     })
 
+    onMounted(() => {
+        // 验证当前设备是否可用
+    })
+
+    const loginFormData = reactive({
+        dydm: "0020",
+        pasword: "123",
+    })
+
+    watchEffect(() => {
+        loginDisabled.value =
+            !loginFormData.dydm || !loginFormData.pasword
+    })
+
     const msg = ref<InstanceType<typeof tmMessage> | null>(null)
 
-    const login = () => {
-        // msg.value?.show({
-        //     mask: true,
-        //     model: "success",
-        //     text: "登录成功",
+    const { error, data, getData } = useFetch("/api/Jcinfo/Logindy", {
+        method: "GET",
+        data: loginFormData,
+    })
 
-        // })
-        uni.navigateTo({ url: "/pages/index/index" })
+    const login = () => {
+        getData()
+        // uni.navigateTo({ url: "/pages/index/index" })
     }
 </script>
 <script lang="ts">
@@ -48,7 +65,8 @@
                     :round="25"
                     prefixColor="light-blue"
                     prefix="tmicon-user-fill"
-                    Placeholder="请输入用户名"
+                    placeholder="请输入店员号"
+                    v-model="loginFormData.dydm"
                 ></tm-input>
             </view>
             <view class="item mt-30">
@@ -58,7 +76,8 @@
                     :type="passwordType"
                     show-password
                     prefix="tmicon-lock-fill"
-                    Placeholder="请输入密码"
+                    placeholder="请输入密码"
+                    v-model="loginFormData.pasword"
                 >
                     <template #right>
                         <tm-icon
@@ -73,6 +92,7 @@
             <view class="item mt-30">
                 <!-- 登录 -->
                 <tm-button
+                    :disabled="loginDisabled"
                     linear="right"
                     linearDeep="accent"
                     block

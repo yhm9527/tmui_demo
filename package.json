@@ -47,6 +47,7 @@
         "@dcloudio/uni-mp-weixin": "3.0.0-3090520231028001",
         "@dcloudio/uni-quickapp-webview": "3.0.0-3090520231028001",
         "@types/weixin-app": "^2.9.7",
+        "@vueuse/core": "^10.7.2",
         "echarts": "5.4.2",
         "pinia": " 2.0.33",
         "sass": "^1.69.7",
