@@ -5,7 +5,7 @@
     // 显示商店选择
     const show = ref(false)
     // 商店列表
-    const shopList = ref<any[]>([
+    const list = ref<any[]>([
         { word: "香蕉", id: 1 },
         { word: "其它水果", id: 2 },
         { word: "苹果", id: 3 },
@@ -26,9 +26,6 @@
         tempValue.value = activeValue.value
         show.value = true
     }
-    const search = () => {
-        console.log("search", searchValue.value)
-    }
     const tempActive = (item: any) => {
         tempId.value = item.id
         tempValue.value = item.word
@@ -40,7 +37,7 @@
 </script>
 <script lang="ts">
     export default {
-        name: "FieldShop",
+        name: "FieldGroup",
     }
 </script>
 <template>
@@ -50,7 +47,7 @@
     >
         <tm-text
             :userInteractionEnabled="false"
-            :label="activeValue || '请选择商店'"
+            :label="activeValue || '请选择柜组'"
         ></tm-text>
         <tm-icon
             :userInteractionEnabled="false"
@@ -67,19 +64,12 @@
             class="px-20 flex flex-col"
             style="height: 100%"
         >
-            <tm-input
-                v-model="searchValue"
-                :searchWidth="120"
-                @search="search"
-                prefix="tmicon-search"
-                searchLabel="搜索"
-            ></tm-input>
             <view
                 class="flex-1 flex flex-col py-20"
                 style="overflow-y: auto"
             >
                 <view
-                    v-for="(item, index) in shopList"
+                    v-for="(item, index) in list"
                     :key="item.id"
                     @click="tempActive(item)"
                 >
@@ -88,7 +78,7 @@
                         :color="tempId == item.id ? 'blue' : ''"
                         >{{ item.word }}</tm-text
                     >
-                    <tm-divider v-if="index < shopList.length - 1"></tm-divider>
+                    <tm-divider v-if="index < list.length - 1"></tm-divider>
                 </view>
             </view>
         </view>

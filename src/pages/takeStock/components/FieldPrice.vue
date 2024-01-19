@@ -2,19 +2,16 @@
     import { ref } from "vue"
     import { useFetch } from "@/tmui/tool/useFun/useFetch"
     import { DEFAULT_API, DEFAULT_FETCH_CONFIG } from "@/common/config"
-    // 显示商店选择
     const show = ref(false)
-    // 商店列表
-    const shopList = ref<any[]>([
-        { word: "香蕉", id: 1 },
-        { word: "其它水果", id: 2 },
-        { word: "苹果", id: 3 },
-        { word: "越南水果", id: 4 },
-        { word: "越南水果", id: 22 },
-        { word: "越南水果", id: 222 },
-        { word: "越南水果", id: 2222 },
-        { word: "越南水果", id: 22222 },
-        { word: "越南水果", id: 222222 },
+    const list = ref<any[]>([
+        { word: "100", id: 1 },
+        { word: "200", id: 2 },
+        { word: "300", id: 3 },
+        { word: "400", id: 4 },
+        { word: "500", id: 22 },
+        { word: "600", id: 222 },
+        { word: "700", id: 2222 },
+        { word: "800", id: 22222 },
     ])
     const searchValue = ref("")
     const activeId = ref(0)
@@ -25,9 +22,6 @@
         tempId.value = activeId.value
         tempValue.value = activeValue.value
         show.value = true
-    }
-    const search = () => {
-        console.log("search", searchValue.value)
     }
     const tempActive = (item: any) => {
         tempId.value = item.id
@@ -40,7 +34,7 @@
 </script>
 <script lang="ts">
     export default {
-        name: "FieldShop",
+        name: "FieldPrice",
     }
 </script>
 <template>
@@ -50,7 +44,7 @@
     >
         <tm-text
             :userInteractionEnabled="false"
-            :label="activeValue || '请选择商店'"
+            :label="activeValue || '请选择价格'"
         ></tm-text>
         <tm-icon
             :userInteractionEnabled="false"
@@ -67,19 +61,12 @@
             class="px-20 flex flex-col"
             style="height: 100%"
         >
-            <tm-input
-                v-model="searchValue"
-                :searchWidth="120"
-                @search="search"
-                prefix="tmicon-search"
-                searchLabel="搜索"
-            ></tm-input>
             <view
                 class="flex-1 flex flex-col py-20"
                 style="overflow-y: auto"
             >
                 <view
-                    v-for="(item, index) in shopList"
+                    v-for="(item, index) in list"
                     :key="item.id"
                     @click="tempActive(item)"
                 >
@@ -88,7 +75,7 @@
                         :color="tempId == item.id ? 'blue' : ''"
                         >{{ item.word }}</tm-text
                     >
-                    <tm-divider v-if="index < shopList.length - 1"></tm-divider>
+                    <tm-divider v-if="index < list.length - 1"></tm-divider>
                 </view>
             </view>
         </view>
