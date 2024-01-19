@@ -2,7 +2,7 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-19 09:27:07
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-19 14:40:57
+ * @LastEditTime: 2024-01-19 14:54:20
  * @FilePath: \tmui_cli_demo\src\pages\takeStock\components\FormData.vue
  * @Description:
  *
@@ -30,6 +30,8 @@
         ref="form"
         :label-width="150"
         v-model="formData"
+        :round="[5]"
+        :margin="[24, 24]"
     >
         <tm-form-item :margin="[0, 0]">
             <view class="flex px-20">
