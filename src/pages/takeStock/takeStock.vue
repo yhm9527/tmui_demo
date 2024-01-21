@@ -9,8 +9,9 @@
  * Copyright (c) 2024 by 2483677516@qq.com, All Rights Reserved.
 -->
 <script setup lang="ts">
-import {} from "vue"
-import FormData from "./components/FormData.vue"
+    import {} from "vue"
+    import FormData from "./components/FormData.vue"
+    import Entering from "./components/Entering.vue"
 </script>
 <script lang="ts">
     export default {
@@ -21,12 +22,9 @@ import FormData from "./components/FormData.vue"
     <tm-app>
         <tm-navbar title="盘点" />
         <form-data></form-data>
-        <tm-sheet :margin="[24,0,24,24]" :round="[5]">
-
-        </tm-sheet>
+        <!-- 手动录入 -->
+        <entering></entering>
     </tm-app>
 </template>
 
-<style lang="scss" scoped>
-</style>
-
+<style lang="scss" scoped></style>

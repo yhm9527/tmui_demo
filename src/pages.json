@@ -14,6 +14,20 @@
 			}
 		},
         {
+			"path": "pages/search/search",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom"
+			}
+		},
+        {
+			"path": "pages/searchDetail/searchDetail",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom"
+			}
+		},
+        {
 			"path": "pages/crop/crop",
 			"style": {
 				"navigationBarTitleText": "",

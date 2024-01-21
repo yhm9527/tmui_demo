@@ -2,7 +2,7 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-09 10:57:44
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-18 21:27:54
+ * @LastEditTime: 2024-01-21 23:39:47
  * @FilePath: \tmui_demo\src\pages\login\login.vue
  * @Description:
  *
@@ -19,11 +19,54 @@
     const passwordType = computed<any>(() => {
         return showPassword.value ? "text" : "password"
     })
+    // 显示遮罩层,验证当前设备
+    const showWin = ref(true)
+    const checkDeviceStatus = ref(0) // 0未验证 1验证成功 2验证失败
+    const checkDeviceMsg = ref("")
+    const checkData = reactive({
+        xlh: "",
+    })
+    const reqCheck = useFetch(DEFAULT_API + "/Jcinfo/Pdjsfzc", {
+        ...DEFAULT_FETCH_CONFIG,
+        data: checkData,
+    })
 
-    console.log(DEFAULT_API)
+    // #ifdef H5
+    checkData.xlh = "testuuid001"
+    reqCheck.getData()
+    // #endif
 
-    onMounted(() => {
-        // 验证当前设备是否可用
+    // #ifdef APP-PLUS
+    showWin.value = true
+    plus.device.getInfo({
+        success: (info) => {
+            checkData.xlh = info.uuid
+            // 验证当前设备是否可用
+            reqCheck.getData()
+        },
+        fail: (error) => {
+            checkDeviceStatus.value = 2
+            checkDeviceMsg.value = error.message
+        },
+    })
+    // #endif
+
+    watchEffect(() => {
+        if (reqCheck.error) {
+            checkDeviceStatus.value = 2
+            checkDeviceMsg.value = reqCheck.data.value?.msg || ""
+        }
+        if (reqCheck.data.value?.status == 200) {
+            checkDeviceStatus.value = 1
+        }
+    })
+
+    watchEffect(() => {
+        if (checkDeviceStatus.value == 1) {
+            setTimeout(() => {
+                showWin.value = false
+            }, 1300)
+        }
     })
 
     const loginFormData = reactive({
@@ -64,17 +107,16 @@
         if (loginData.value.status != 200) {
             // 登录失败
             msg.value?.show({ model: "error", text: loginData.value.msg })
-            setTimeout(()=>{
+            setTimeout(() => {
                 uni.reLaunch({ url: "/pages/index/index" })
-            },1300)
+            }, 1300)
             return
-        }else{
+        } else {
             msg.value?.show({ model: "success", text: loginData.value.msg })
-            setTimeout(()=>{
+            setTimeout(() => {
                 uni.reLaunch({ url: "/pages/index/index" })
-            },1300)
+            }, 1300)
         }
-
     }
 </script>
 <script lang="ts">
@@ -84,6 +126,42 @@
 </script>
 <template>
     <tm-app>
+        <tm-overlay
+            v-model:show="showWin"
+            contentAnimation
+            :overlayClick="false"
+        >
+            <view @click.stop="">
+                <tm-spin
+                    :load="checkDeviceStatus === 0"
+                    tip="验证设备..."
+                >
+                    <tm-sheet
+                        :width="400"
+                        :height="400"
+                    >
+                        <tm-result
+                            v-if="checkDeviceStatus === 1"
+                            color="green"
+                            status="success"
+                            :showBtn="false"
+                            :clickDisabled="false"
+                            title="验证成功"
+                            sub-title="欢迎使用"
+                        ></tm-result>
+                        <tm-result
+                            v-else-if="checkDeviceStatus === 2"
+                            color="red"
+                            status="error"
+                            :showBtn="false"
+                            :clickDisabled="false"
+                            title="验证失败"
+                            :sub-title="checkDeviceMsg || '请联系管理员'"
+                        ></tm-result>
+                    </tm-sheet>
+                </tm-spin>
+            </view>
+        </tm-overlay>
         <view class="flex flex-col flex-center container">
             <view class="item">
                 <tm-text

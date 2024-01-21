@@ -2,7 +2,7 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-09 14:32:52
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-18 21:12:34
+ * @LastEditTime: 2024-01-21 20:13:45
  * @FilePath: \tmui_demo\src\pages\index\index.nvue
  * @Description:
  *
@@ -12,6 +12,9 @@
     import {} from "vue"
     const goTakeStock = () => {
         uni.navigateTo({ url: "/pages/takeStock/takeStock" })
+    }
+    const goSearch = () => {
+        uni.navigateTo({ url: "/pages/search/search" })
     }
 </script>
 
@@ -31,10 +34,10 @@
 					<tm-icon name="tmicon-edit" :font-size="42"></tm-icon>
 					<tm-text _class="pt-10" :font-size="22" label="盘点"></tm-text>
 				</tm-grid-item>
-				<!-- <tm-grid-item :height="120">
+				<tm-grid-item :height="120" @click="goSearch">
 					<tm-icon name="tmicon-search-plus" :font-size="42"></tm-icon>
 					<tm-text _class="pt-10" :font-size="22" label="盘点查询"></tm-text>
-				</tm-grid-item> -->
+				</tm-grid-item>
 			</tm-grid>
 		</tm-sheet>
     </tm-app>

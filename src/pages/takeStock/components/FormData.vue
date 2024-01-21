@@ -2,8 +2,8 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-19 09:27:07
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-19 14:54:20
- * @FilePath: \tmui_cli_demo\src\pages\takeStock\components\FormData.vue
+ * @LastEditTime: 2024-01-21 16:28:14
+ * @FilePath: \tmui_demo\src\pages\takeStock\components\FormData.vue
  * @Description:
  *
  * Copyright (c) 2024 by 2483677516@qq.com, All Rights Reserved.
@@ -15,6 +15,7 @@
     import FieldGroup from "./FieldGroup.vue"
     import FieldPrice from "./FieldPrice.vue"
     import FieldGoods from "./FieldGoods.vue"
+    import FieldScan from "./FieldScan.vue"
 
     const formData = ref({
         time: "",
@@ -90,10 +91,17 @@
             required
             label="商品"
             field="time"
-            :border="false"
             :margin="[0, 0]"
         >
             <field-goods></field-goods>
+        </tm-form-item>
+        <!-- 扫描录入 -->
+        <tm-form-item
+            label="扫描录入"
+            :border="false"
+            :margin="[0, 0]"
+        >
+            <field-scan></field-scan>
         </tm-form-item>
     </tm-form>
 </template>
