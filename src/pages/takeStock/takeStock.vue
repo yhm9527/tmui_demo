@@ -2,17 +2,23 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-18 21:13:45
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-22 14:25:20
- * @FilePath: \tmui_cli_demo\src\pages\takeStock\takeStock.vue
+ * @LastEditTime: 2024-01-22 23:52:49
+ * @FilePath: \tmui_demo\src\pages\takeStock\takeStock.vue
  * @Description:
  *
  * Copyright (c) 2024 by 2483677516@qq.com, All Rights Reserved.
 -->
 <script setup lang="ts">
-    import { ref, provide } from "vue"
-    import { TakeStockFormDataKey } from "./InjectionKey"
+    import { ref, provide, watch } from "vue"
+    import {
+        TakeStockFormDataKey,
+        TakeStockGoodsDetailKey,
+    } from "./InjectionKey"
     import FormData from "./components/FormData.vue"
     import Entering from "./components/Entering.vue"
+    import { useFetch } from "@/tmui/tool/useFun/useFetch"
+    import { DEFAULT_API, DEFAULT_FETCH_CONFIG } from "@/common/config"
+
     const formData = ref({
         djbh: "",
         uname: "",
@@ -26,6 +32,74 @@
     provide(TakeStockFormDataKey, formData)
     const userInfo = uni.getStorageSync("userInfo")
     formData.value.userid = userInfo.Dydm
+    formData.value.uname = userInfo.Dymc
+
+    // 商品信息
+    const goodsData = ref({
+        Spdm: "",
+        Spmc: "",
+    })
+    // 商品尺码列表
+    const goodsSizeList = ref<
+        {
+            Cmdm: string
+            Cmmc: string
+        }[]
+    >([])
+    // 商品颜色列表
+    const goodsColorList = ref<
+        {
+            Ysdm: string
+            Ysmc: string
+        }[]
+    >([])
+    const reqGoodsDataParams = {
+        spdm: "",
+    }
+
+    provide(TakeStockGoodsDetailKey, {
+        goodsData,
+        goodsSizeList,
+        goodsColorList,
+    })
+
+    // 请求goods
+    const reqGoodsData = useFetch(DEFAULT_API + "/Work/Getspyscmxx", {
+        ...DEFAULT_FETCH_CONFIG,
+        data: reqGoodsDataParams,
+    })
+
+    watch(
+        () => formData.value.sptm,
+        (val) => {
+            reqGoodsDataParams.spdm = val
+            reqGoodsData.getData()
+        }
+    )
+
+    watch(
+        () => reqGoodsData.data.value,
+        (val) => {
+            if (val?.status == 200) {
+                goodsData.value.Spmc = val?.data?.Objzl?.Spmc || ""
+                goodsData.value.Spdm = val?.data?.Objzl?.Spdm || ""
+                goodsSizeList.value = val?.data?.listcm
+                goodsColorList.value = val?.data?.listys
+            } else {
+                goodsData.value.Spmc = ""
+                goodsData.value.Spdm = ""
+                goodsSizeList.value = []
+                goodsColorList.value = []
+            }
+        }
+    )
+
+    watch(
+        () => reqGoodsData.data.value?.data,
+        (val) => {
+            console.log(val)
+        }
+    )
 </script>
 <script lang="ts">
     export default {
@@ -37,7 +111,7 @@
         <tm-navbar title="盘点" />
         <form-data></form-data>
         <!-- 手动录入 -->
-        <entering></entering>
+        <entering v-if="formData.djbh"></entering>
     </tm-app>
 </template>
 

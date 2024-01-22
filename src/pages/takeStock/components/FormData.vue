@@ -2,8 +2,8 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-19 09:27:07
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-22 15:09:11
- * @FilePath: \tmui_cli_demo\src\pages\takeStock\components\FormData.vue
+ * @LastEditTime: 2024-01-22 23:53:56
+ * @FilePath: \tmui_demo\src\pages\takeStock\components\FormData.vue
  * @Description:
  *
  * Copyright (c) 2024 by 2483677516@qq.com, All Rights Reserved.
@@ -47,6 +47,9 @@
             formData.value.djbh = val
         }
     )
+    const scan = (val: any) => {
+        console.log(val)
+    }
 </script>
 <script lang="ts">
     export default {
@@ -120,17 +123,20 @@
             label="价格"
             field="time"
             :margin="[0, 0]"
+            :border="!!formData.djbh"
         >
             <field-price></field-price>
         </tm-form-item>
         <!-- 扫描录入 -->
         <tm-form-item
+            v-show="formData.djbh"
             label="扫描录入"
             :margin="[0, 0]"
         >
             <field-scan></field-scan>
         </tm-form-item>
         <tm-form-item
+            v-show="formData.djbh"
             label="商品"
             :border="false"
             :margin="[0, 0]"

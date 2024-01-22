@@ -11,3 +11,19 @@ export const TakeStockFormDataKey = Symbol() as InjectionKey<Ref<{
     userid: string | number,
     djlx: string,
 }>>
+
+// goodsDetail key
+export const TakeStockGoodsDetailKey = Symbol() as InjectionKey<{
+    goodsData: Ref<{
+        Spdm: string,
+        Spmc: string,
+    }>,
+    goodsSizeList: Ref<{
+        Cmdm: string
+        Cmmc: string
+    }[]>,
+    goodsColorList: Ref<{
+        Ysdm: string
+        Ysmc: string
+    }[]>,
+}>

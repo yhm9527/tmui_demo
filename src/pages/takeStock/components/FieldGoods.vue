@@ -1,11 +1,18 @@
 <script setup lang="ts">
-    import { ref } from "vue"
-    import { useFetch } from "@/tmui/tool/useFun/useFetch"
-    import { DEFAULT_API, DEFAULT_FETCH_CONFIG } from "@/common/config"
+    import { ref, inject } from "vue"
+    import { TakeStockFormDataKey } from "../InjectionKey"
+    const formData = inject(TakeStockFormDataKey)
     const searchValue = ref("")
     const search = () => {
-        console.log("search", searchValue.value);
+        if(!formData){
+            return
+        }
+        formData.value.sptm = searchValue.value
     }
+
+    // #ifdef H5
+    searchValue.value = "a13349"
+    // #endif
 </script>
 <script lang="ts">
     export default {

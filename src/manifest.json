@@ -89,6 +89,9 @@
         },
         "uniStatistics" : {
             "enable" : false
+        },
+        "compatible" : {
+            "ignoreVersion" : true
         }
     },
     "quickapp" : {},
