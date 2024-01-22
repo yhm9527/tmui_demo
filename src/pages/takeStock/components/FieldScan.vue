@@ -2,28 +2,38 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-21 16:23:31
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-21 16:28:44
- * @FilePath: \tmui_demo\src\pages\takeStock\components\FieldScan.vue
+ * @LastEditTime: 2024-01-22 11:08:28
+ * @FilePath: \tmui_cli_demo\src\pages\takeStock\components\FieldScan.vue
  * @Description:
  *
  * Copyright (c) 2024 by 2483677516@qq.com, All Rights Reserved.
 -->
 <script setup lang="ts">
-    import { ref, onMounted, onUnmounted } from "vue"
+    import { ref, onUnmounted } from "vue"
 
     const value = ref("")
     const focusFlag = ref(false)
     let intervalId: any
-    onMounted(() => {
+    let timeoutId: any
+    const openScan = () => {
+        if (intervalId) {
+            clearInterval(intervalId)
+        }
+        if (timeoutId) {
+            clearTimeout(timeoutId)
+        }
         intervalId = setInterval(() => {
             uni.hideKeyboard()
         }, 20)
-    })
+        timeoutId = setTimeout(() => {
+            focusFlag.value = !focusFlag.value
+        }, 200)
+    }
     onUnmounted(() => {
         intervalId && clearInterval(intervalId)
     })
     const confirm = () => {
-        console.log('扫描值',value.value)
+        console.log("扫描值", value.value)
     }
 </script>
 <script lang="ts">
@@ -34,7 +44,7 @@
 <template>
     <tm-button
         size="small"
-        @click="focusFlag = !focusFlag"
+        @click="openScan"
         :color="focusFlag ? 'red' : 'green'"
         :label="!focusFlag ? '开启扫码' : '关闭扫码'"
     ></tm-button>

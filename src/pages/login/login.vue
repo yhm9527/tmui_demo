@@ -2,14 +2,14 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-09 10:57:44
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-21 23:39:47
- * @FilePath: \tmui_demo\src\pages\login\login.vue
+ * @LastEditTime: 2024-01-22 10:47:38
+ * @FilePath: \tmui_cli_demo\src\pages\login\login.vue
  * @Description:
  *
  * Copyright (c) 2024 by 2483677516@qq.com, All Rights Reserved.
 -->
 <script setup lang="ts">
-    import { ref, reactive, computed, onMounted, watchEffect } from "vue"
+    import { ref, reactive, computed, watchEffect } from "vue"
     import { useFetch } from "@/tmui/tool/useFun/useFetch"
     import { DEFAULT_API, DEFAULT_FETCH_CONFIG } from "@/common/config"
     import tmMessage from "@/tmui/components/tm-message/tm-message.vue"
@@ -20,7 +20,7 @@
         return showPassword.value ? "text" : "password"
     })
     // 显示遮罩层,验证当前设备
-    const showWin = ref(true)
+    const showWin = ref(false)
     const checkDeviceStatus = ref(0) // 0未验证 1验证成功 2验证失败
     const checkDeviceMsg = ref("")
     const checkData = reactive({
@@ -32,23 +32,24 @@
     })
 
     // #ifdef H5
-    checkData.xlh = "testuuid001"
-    reqCheck.getData()
+    // checkData.xlh = "testuuid001"
+    // reqCheck.getData()
     // #endif
 
     // #ifdef APP-PLUS
-    showWin.value = true
-    plus.device.getInfo({
-        success: (info) => {
-            checkData.xlh = info.uuid
-            // 验证当前设备是否可用
-            reqCheck.getData()
-        },
-        fail: (error) => {
-            checkDeviceStatus.value = 2
-            checkDeviceMsg.value = error.message
-        },
-    })
+    // todo 目前不检测当前设备
+    // showWin.value = true
+    // plus.device.getInfo({
+    //     success: (info) => {
+    //         checkData.xlh = info.uuid
+    //         // 验证当前设备是否可用
+    //         reqCheck.getData()
+    //     },
+    //     fail: (error) => {
+    //         checkDeviceStatus.value = 2
+    //         checkDeviceMsg.value = error.message
+    //     },
+    // })
     // #endif
 
     watchEffect(() => {
@@ -104,15 +105,22 @@
 
     const login = async () => {
         await getData()
-        if (loginData.value.status != 200) {
+        if (loginData.value?.status != 200) {
             // 登录失败
-            msg.value?.show({ model: "error", text: loginData.value.msg })
+            msg.value?.show({
+                model: "error",
+                text: loginData.value?.msg || "登录失败",
+            })
             setTimeout(() => {
                 uni.reLaunch({ url: "/pages/index/index" })
             }, 1300)
             return
         } else {
-            msg.value?.show({ model: "success", text: loginData.value.msg })
+            msg.value?.show({
+                model: "success",
+                text: loginData.value?.msg || "登录成功",
+            })
+            uni.setStorageSync("userInfo", JSON.parse(JSON.stringify(loginData.value?.data)))
             setTimeout(() => {
                 uni.reLaunch({ url: "/pages/index/index" })
             }, 1300)

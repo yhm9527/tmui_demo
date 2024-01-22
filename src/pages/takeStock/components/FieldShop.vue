@@ -1,41 +1,60 @@
 <script setup lang="ts">
-    import { ref } from "vue"
+    import { ref, reactive, watchEffect, computed, inject } from "vue"
+    import { TakeStockFormDataKey } from "../InjectionKey"
     import { useFetch } from "@/tmui/tool/useFun/useFetch"
     import { DEFAULT_API, DEFAULT_FETCH_CONFIG } from "@/common/config"
+    const params = reactive({
+        search: "",
+    })
+
+    const formData = inject(TakeStockFormDataKey)
+
+    // 商店列表
+    const shopList = ref<any[]>()
     // 显示商店选择
     const show = ref(false)
-    // 商店列表
-    const shopList = ref<any[]>([
-        { word: "香蕉", id: 1 },
-        { word: "其它水果", id: 2 },
-        { word: "苹果", id: 3 },
-        { word: "越南水果", id: 4 },
-        { word: "越南水果", id: 22 },
-        { word: "越南水果", id: 222 },
-        { word: "越南水果", id: 2222 },
-        { word: "越南水果", id: 22222 },
-        { word: "越南水果", id: 222222 },
-    ])
-    const searchValue = ref("")
-    const activeId = ref(0)
-    const activeValue = ref("")
-    const tempId = ref(0)
-    const tempValue = ref("")
+    // 定义request
+    const req = useFetch(DEFAULT_API + "/Work/GetCangku", {
+        ...DEFAULT_FETCH_CONFIG,
+        data: params,
+    })
+
+    req.getData()
+
+    watchEffect(() => {
+        if (req.data.value?.status == 200) {
+            shopList.value = req.data.value?.data
+        } else {
+            shopList.value = []
+        }
+    })
+
+    const activeValue = computed(() => {
+        return (
+            shopList.value?.find((item) => item.Khdm == formData?.value?.ckdm)
+                ?.Khmc || ""
+        )
+    })
+    const tempId = ref("")
     const showDrawer = () => {
-        tempId.value = activeId.value
-        tempValue.value = activeValue.value
+        if (formData?.value?.djbh) {
+            return
+        }
+        tempId.value = formData?.value?.ckdm as string
         show.value = true
     }
-    const search = () => {
-        console.log("search", searchValue.value)
+    const search = async () => {
+        console.log("search", params.search)
+        await req.getData()
     }
     const tempActive = (item: any) => {
-        tempId.value = item.id
-        tempValue.value = item.word
+        tempId.value = item.Khdm
     }
     const confirm = () => {
-        activeId.value = tempId.value
-        activeValue.value = tempValue.value
+        if (!formData) {
+            return
+        }
+        formData.value.ckdm = tempId.value
     }
 </script>
 <script lang="ts">
@@ -49,6 +68,7 @@
         class="flex flex-row flex-row-center-between"
     >
         <tm-text
+            :color="formData?.djbh ? 'grey' : 'black'"
             :userInteractionEnabled="false"
             :label="activeValue || '请选择商店'"
         ></tm-text>
@@ -68,7 +88,7 @@
             style="height: 100%"
         >
             <tm-input
-                v-model="searchValue"
+                v-model="params.search"
                 :searchWidth="120"
                 @search="search"
                 prefix="tmicon-search"
@@ -80,15 +100,17 @@
             >
                 <view
                     v-for="(item, index) in shopList"
-                    :key="item.id"
+                    :key="item.Khdm"
                     @click="tempActive(item)"
                 >
                     <tm-text
                         class="px-20"
-                        :color="tempId == item.id ? 'blue' : ''"
-                        >{{ item.word }}</tm-text
+                        :color="tempId == item.Khdm ? 'blue' : ''"
+                        >{{ item.Khmc }}</tm-text
                     >
-                    <tm-divider v-if="index < shopList.length - 1"></tm-divider>
+                    <tm-divider
+                        v-if="shopList && index < shopList.length - 1"
+                    ></tm-divider>
                 </view>
             </view>
         </view>
