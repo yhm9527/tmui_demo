@@ -2,7 +2,7 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-18 21:13:45
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-23 15:16:24
+ * @LastEditTime: 2024-01-23 17:56:31
  * @FilePath: \tmui_cli_demo\src\pages\takeStock\takeStock.vue
  * @Description:
  *
@@ -95,8 +95,8 @@
             if (val?.status == 200) {
                 goodsData.value.Spmc = val?.data?.Objzl?.Spmc || ""
                 goodsData.value.Spdm = val?.data?.Objzl?.Spdm || ""
-                goodsSizeList.value = val?.data?.listcm
-                goodsColorList.value = val?.data?.listys
+                goodsSizeList.value = val?.data?.listcm || []
+                goodsColorList.value = val?.data?.listys || []
             } else {
                 goodsData.value.Spmc = ""
                 goodsData.value.Spdm = ""
@@ -115,6 +115,7 @@
 
     const p = {
         djbh: "",
+        zdrid: userInfo.Dydm,
     }
 
     watch(
@@ -123,7 +124,6 @@
             p.djbh = val
         }
     )
-
     const reqData = useFetch(DEFAULT_API + "/Work/Getpdjxfhsj", {
         ...DEFAULT_FETCH_CONFIG,
         data: p,
@@ -132,19 +132,27 @@
         if (e.code) {
             // 编辑
             p.djbh = e.code
-            // reqData.getData()
+            reqData.getData()
         }
     })
     watch(
         () => reqData.data.value,
         (val) => {
             if (val?.status == 200) {
-                console.log(val)
+                formData.value.djbh = val?.data?.djbh
+                formData.value.ckdm = val?.data?.ckdm
+                formData.value.kwdm = val?.data?.kwdm
+                formData.value.rq = val?.data?.rq
+                formData.value.djlx = val?.data?.djlx
+                count.value.number = val?.data?.sl
+                count.value.size = val?.data?.ks
             }
         }
     )
     onShow(() => {
-        console.log("单据编号", p.djbh)
+        if(p.djbh){
+            reqData.getData()
+        }
     })
 </script>
 <script lang="ts">

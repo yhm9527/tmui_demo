@@ -24,17 +24,23 @@
     watch(
         () => goodsDetail?.goodsData.value.Spdm,
         () => {
-            goodsDetail?.goodsColorList.value.forEach((item) => {
-                goodsDetail?.goodsSizeList.value.forEach((item2) => {
-                    tempList.value.push({
-                        Ysdm: item.Ysdm,
-                        Cmdm: item2.Cmdm,
-                        Sl: 0,
-                    })
-                })
-            })
+            activeColor.value = ""
+            initTempList()
         }
     )
+
+    const initTempList = () => {
+        tempList.value = []
+        goodsDetail?.goodsColorList.value.forEach((item) => {
+            goodsDetail?.goodsSizeList.value.forEach((item2) => {
+                tempList.value.push({
+                    Ysdm: item.Ysdm,
+                    Cmdm: item2.Cmdm,
+                    Sl: 0,
+                })
+            })
+        })
+    }
 
     const getIdx = computed(() => {
         return (cmdm: string, ysdm: string) => {
@@ -94,10 +100,11 @@
         (newVal) => {
             if (newVal?.status == 200) {
                 // success
-                if(count){
+                if (count) {
                     count.value.number = newVal?.data?.sl
                     count.value.size = newVal?.data?.ks
                 }
+                initTempList()
                 uni.showToast({
                     title: req.data.value?.msg || "保存成功",
                     icon: "success",
