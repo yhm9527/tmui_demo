@@ -2,21 +2,23 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-21 16:23:31
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-22 22:34:16
- * @FilePath: \tmui_demo\src\pages\takeStock\components\FieldScan.vue
+ * @LastEditTime: 2024-01-23 16:05:27
+ * @FilePath: \tmui_cli_demo\src\pages\takeStock\components\FieldScan.vue
  * @Description:
  *
  * Copyright (c) 2024 by 2483677516@qq.com, All Rights Reserved.
 -->
 <script setup lang="ts">
-    import { ref, onUnmounted, inject, nextTick, watch } from "vue"
-    import { TakeStockFormDataKey } from "../InjectionKey"
+    import { ref, inject, nextTick, watch } from "vue"
+    import { TakeStockFormDataKey, CountKey } from "../InjectionKey"
     import { useFetch } from "@/tmui/tool/useFun/useFetch"
     import { DEFAULT_API, DEFAULT_FETCH_CONFIG } from "@/common/config"
+    import TkInput from "@/uni_modules/tk-input/components/tk-input/tk-input.vue"
     const formData = inject(TakeStockFormDataKey)
+    const count = inject(CountKey)
     const value = ref("")
-    const focusFlag = ref(false)
     const show = ref(false)
+    const inputRef = ref<InstanceType<typeof TkInput>>()
     const openScan = () => {
         // #ifdef H5
         value.value = "A13348514069"
@@ -24,24 +26,16 @@
         // #endif
         show.value = true
         nextTick(() => {
-            focusFlag.value = true
+            // 输入框聚焦
+            inputRef.value?.focus()
         })
     }
 
     const closeScan = () => {
-        focusFlag.value = false
+        // 输入框失焦
+        inputRef.value?.blur()
         show.value = false
     }
-    const focus = () => {
-        uni.hideKeyboard()
-    }
-    // #ifdef APP-PLUS
-    uni.onKeyboardHeightChange((res) => {
-        if (show.value && res.height > 0) {
-            uni.hideKeyboard()
-        }
-    })
-    // #endif
 
     let params = {
         djbh: "",
@@ -71,10 +65,6 @@
         params.sptm = value.value
         req.getData()
         value.value = ""
-        focusFlag.value = false
-        setTimeout(() => {
-            focusFlag.value = true
-        }, 200)
     }
 
     watch(
@@ -82,15 +72,19 @@
         (newVal) => {
             console.log(req.data.value)
             if (newVal?.status == 200) {
+                if (count) {
+                    count.value.number = newVal?.data?.sl
+                    count.value.size = newVal?.data?.ks
+                }
                 // success
                 uni.showToast({
-                    title: req.data.value?.msg || '成功',
+                    title: req.data.value?.msg || "成功",
                     icon: "success",
                 })
             } else {
                 // fail
                 uni.showToast({
-                    title: req.data.value?.msg || '失败',
+                    title: req.data.value?.msg || "失败",
                     icon: "error",
                 })
             }
@@ -119,15 +113,13 @@
                 :width="500"
                 :height="500"
             >
-                <tm-input
-                    style="position: absolute; z-index: -1"
-                    :focus="focusFlag"
-                    :autoBlur="false"
-                    placeholder="自动聚焦"
+                <tk-input
+                    ref="inputRef"
+                    :style="{ zIndex: '-1', position: 'absolute' }"
+                    :allowEdit="true"
                     v-model="value"
                     @confirm="confirm"
-                    @focus="focus"
-                ></tm-input>
+                />
                 <tm-result
                     color="green"
                     status="success"

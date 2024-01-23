@@ -2,17 +2,39 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-21 20:38:59
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-21 21:20:37
- * @FilePath: \tmui_demo\src\pages\search\components\FieldDate.vue
+ * @LastEditTime: 2024-01-23 11:16:11
+ * @FilePath: \tmui_cli_demo\src\pages\search\components\FieldDate.vue
  * @Description:
  *
  * Copyright (c) 2024 by 2483677516@qq.com, All Rights Reserved.
 -->
 <script setup lang="ts">
-    import { ref, computed } from "vue"
+    import { ref, computed, inject, watch } from "vue"
+    import { FormDataKey } from "../InjectionKey"
+    import { useDateFormat } from "@vueuse/core"
+    const formData = inject(FormDataKey)
     const show = ref(false)
-    const dateValue = ref([])
-    const dateValue_str = computed(() =>  dateValue.value.filter((item) => item).join("~"))
+    const dateValue = ref<string[]>([])
+    const dateValue_str = computed(() =>
+        dateValue.value.filter((item) => item).join("~")
+    )
+
+    watch(
+        () => dateValue.value,
+        (val) => {
+            if(!formData){
+                return
+            }
+            formData.value.Strq = val[0]
+            formData.value.Edrq = val[1]
+        }
+    )
+
+    // 日期范围 默认为今天
+    dateValue.value = [
+        useDateFormat(new Date(), "YYYY-MM-DD").value,
+        useDateFormat(new Date(), "YYYY-MM-DD").value,
+    ]
 </script>
 <script lang="ts">
     export default {
@@ -44,7 +66,7 @@
             <tm-time-between
                 @confirm="show = false"
                 :asyncModel="false"
-                format="YYYY/MM/DD"
+                format="YYYY-MM-DD"
                 v-model="dateValue"
                 v-model:model-str="dateValue"
                 :default-value="dateValue"

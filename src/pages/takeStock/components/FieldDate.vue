@@ -49,7 +49,7 @@
         v-model:show="show"
         v-model="formData.rq"
         :defaultValue="formData.rq"
-        format="YYYY/MM/DD"
+        format="YYYY-MM-DD"
         v-model:model-str="formData.rq"
     ></tm-time-picker>
 </template>

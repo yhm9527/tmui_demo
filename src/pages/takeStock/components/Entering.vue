@@ -3,18 +3,16 @@
     import {
         TakeStockFormDataKey,
         TakeStockGoodsDetailKey,
+        CountKey,
     } from "../InjectionKey"
     import { useFetch } from "@/tmui/tool/useFun/useFetch"
     import { DEFAULT_API, DEFAULT_FETCH_CONFIG } from "@/common/config"
     import tmMessage from "@/tmui/components/tm-message/tm-message.vue"
-
     const msg = ref<InstanceType<typeof tmMessage> | null>(null)
-
     const formData = inject(TakeStockFormDataKey)
     const goodsDetail = inject(TakeStockGoodsDetailKey)
-
+    const count = inject(CountKey)
     const activeColor = ref("")
-
     const tempList = ref<
         {
             Cmdm: string
@@ -58,7 +56,7 @@
         listyc: [] as any[],
     }
 
-    const req = useFetch(DEFAULT_API + "/Work/Savepd", {
+    const req = useFetch(DEFAULT_API + "/Work/Savepdsr", {
         ...DEFAULT_FETCH_CONFIG,
         method: "POST",
         data: params,
@@ -96,11 +94,15 @@
         (newVal) => {
             if (newVal?.status == 200) {
                 // success
+                if(count){
+                    count.value.number = newVal?.data?.sl
+                    count.value.size = newVal?.data?.ks
+                }
                 uni.showToast({
                     title: req.data.value?.msg || "保存成功",
                     icon: "success",
                 })
-            }else{
+            } else {
                 // fail
                 uni.showToast({
                     title: req.data.value?.msg || "保存失败",
@@ -130,7 +132,7 @@
                     <tm-text label="数量 :"></tm-text>
                     <tm-text
                         _class="ml-10 text-weight-b"
-                        label="20"
+                        :label="count?.number"
                         color="red"
                     ></tm-text>
                 </view>
@@ -140,7 +142,7 @@
                     <tm-text label="款数 :"></tm-text>
                     <tm-text
                         _class="ml-10 text-weight-b"
-                        label="5"
+                        :label="count?.size"
                         color="red"
                     ></tm-text>
                 </view>

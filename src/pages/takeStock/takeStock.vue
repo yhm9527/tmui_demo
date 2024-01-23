@@ -2,17 +2,19 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-18 21:13:45
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-22 23:52:49
- * @FilePath: \tmui_demo\src\pages\takeStock\takeStock.vue
+ * @LastEditTime: 2024-01-23 15:16:24
+ * @FilePath: \tmui_cli_demo\src\pages\takeStock\takeStock.vue
  * @Description:
  *
  * Copyright (c) 2024 by 2483677516@qq.com, All Rights Reserved.
 -->
 <script setup lang="ts">
     import { ref, provide, watch } from "vue"
+    import { onLoad, onShow } from "@dcloudio/uni-app"
     import {
         TakeStockFormDataKey,
         TakeStockGoodsDetailKey,
+        CountKey,
     } from "./InjectionKey"
     import FormData from "./components/FormData.vue"
     import Entering from "./components/Entering.vue"
@@ -30,6 +32,16 @@
         djlx: "",
     })
     provide(TakeStockFormDataKey, formData)
+
+    // 统计
+    const count = ref({
+        // 数量
+        number: 0,
+        // 款数
+        size: 0,
+    })
+    provide(CountKey, count)
+
     const userInfo = uni.getStorageSync("userInfo")
     formData.value.userid = userInfo.Dydm
     formData.value.uname = userInfo.Dymc
@@ -100,6 +112,40 @@
             console.log(val)
         }
     )
+
+    const p = {
+        djbh: "",
+    }
+
+    watch(
+        () => formData.value.djbh,
+        (val) => {
+            p.djbh = val
+        }
+    )
+
+    const reqData = useFetch(DEFAULT_API + "/Work/Getpdjxfhsj", {
+        ...DEFAULT_FETCH_CONFIG,
+        data: p,
+    })
+    onLoad((e: any) => {
+        if (e.code) {
+            // 编辑
+            p.djbh = e.code
+            // reqData.getData()
+        }
+    })
+    watch(
+        () => reqData.data.value,
+        (val) => {
+            if (val?.status == 200) {
+                console.log(val)
+            }
+        }
+    )
+    onShow(() => {
+        console.log("单据编号", p.djbh)
+    })
 </script>
 <script lang="ts">
     export default {

@@ -27,3 +27,9 @@ export const TakeStockGoodsDetailKey = Symbol() as InjectionKey<{
         Ysmc: string
     }[]>,
 }>
+
+// 统计
+export const CountKey = Symbol() as InjectionKey<Ref<{
+    number: number
+    size: number
+}>>

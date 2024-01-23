@@ -2,8 +2,8 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-19 09:27:07
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-22 23:53:56
- * @FilePath: \tmui_demo\src\pages\takeStock\components\FormData.vue
+ * @LastEditTime: 2024-01-23 10:03:18
+ * @FilePath: \tmui_cli_demo\src\pages\takeStock\components\FormData.vue
  * @Description:
  *
  * Copyright (c) 2024 by 2483677516@qq.com, All Rights Reserved.
@@ -47,8 +47,10 @@
             formData.value.djbh = val
         }
     )
-    const scan = (val: any) => {
-        console.log(val)
+    const goSearchDetail = () => {
+        uni.navigateTo({
+            url: "/pages/searchDetail/searchDetail?isDelete=1&code=" + formData?.value.djbh,
+        })
     }
 </script>
 <script lang="ts">
@@ -80,6 +82,7 @@
                     label="查询"
                     :margin="[10]"
                     size="small"
+                    @click="goSearchDetail()"
                 ></tm-button>
             </view>
         </tm-form-item>
