@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { reactive, watch, ref, inject } from "vue"
-    import { MsgKey } from "../InjectionKey"
+    import { MsgKey, QueryKey } from "../InjectionKey"
     import { useFetch } from "@/tmui/tool/useFun/useFetch"
     import { DEFAULT_API, DEFAULT_FETCH_CONFIG } from "@/common/config"
     type Props = {
@@ -19,6 +19,7 @@
     }
     const props = defineProps<Props>()
     const msg = inject(MsgKey)
+    const query = inject(QueryKey)
     const userInfo: { [key: string]: string } = uni.getStorageSync("userInfo")
 
     const submitParams = reactive({
@@ -38,6 +39,7 @@
         ...DEFAULT_FETCH_CONFIG,
         data: {
             djbh: props.data.djbh,
+            zdrid: userInfo.Dydm,
         },
     })
 
@@ -56,6 +58,7 @@
                     text: val?.msg || "提交成功",
                     model: "success",
                 })
+                query && query()
             } else {
                 msg?.value?.show({
                     text: val?.msg || "提交失败",
@@ -73,6 +76,7 @@
                     text: val?.msg || "删除成功",
                     model: "success",
                 })
+                query && query()
             } else {
                 msg?.value?.show({
                     text: val?.msg || "删除失败",

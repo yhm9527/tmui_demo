@@ -2,14 +2,14 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-09 10:57:44
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-22 10:47:38
- * @FilePath: \tmui_cli_demo\src\pages\login\login.vue
+ * @LastEditTime: 2024-01-23 22:34:34
+ * @FilePath: \tmui_demo\src\pages\login\login.vue
  * @Description:
  *
  * Copyright (c) 2024 by 2483677516@qq.com, All Rights Reserved.
 -->
 <script setup lang="ts">
-    import { ref, reactive, computed, watchEffect } from "vue"
+    import { ref, reactive, computed, watchEffect, watch } from "vue"
     import { useFetch } from "@/tmui/tool/useFun/useFetch"
     import { DEFAULT_API, DEFAULT_FETCH_CONFIG } from "@/common/config"
     import tmMessage from "@/tmui/components/tm-message/tm-message.vue"
@@ -31,36 +31,56 @@
         data: checkData,
     })
 
+    const registerFormData = reactive({
+        xlh: "",
+        gsmc: "",
+    })
+    const isRegister = ref(false)
+    const reqRegister = useFetch(DEFAULT_API + "/Jcinfo/Pdjsqzc", {
+        ...DEFAULT_FETCH_CONFIG,
+        data: registerFormData,
+    })
+
     // #ifdef H5
-    // checkData.xlh = "testuuid001"
-    // reqCheck.getData()
+    checkData.xlh = "d42383549ac743edb873932e78cc076d11"
+    registerFormData.xlh = "d42383549ac743edb873932e78cc076d11"
     // #endif
 
     // #ifdef APP-PLUS
     // todo 目前不检测当前设备
-    // showWin.value = true
-    // plus.device.getInfo({
-    //     success: (info) => {
-    //         checkData.xlh = info.uuid
-    //         // 验证当前设备是否可用
-    //         reqCheck.getData()
-    //     },
-    //     fail: (error) => {
-    //         checkDeviceStatus.value = 2
-    //         checkDeviceMsg.value = error.message
-    //     },
-    // })
+    plus.device.getInfo({
+        success: (info) => {
+            console.log("设备信息", info)
+            checkData.xlh = info.uuid
+            registerFormData.xlh = info.uuid
+            // 验证当前设备是否可用
+        },
+        fail: (error) => {
+            checkDeviceStatus.value = 2
+            checkDeviceMsg.value = error.message
+        },
+    })
     // #endif
 
-    watchEffect(() => {
-        if (reqCheck.error) {
-            checkDeviceStatus.value = 2
-            checkDeviceMsg.value = reqCheck.data.value?.msg || ""
+    watch(
+        () => reqCheck.data.value,
+        () => {
+            if (reqCheck.data.value?.status == 200) {
+                isRegister.value = false
+                checkDeviceStatus.value = 1
+                login()
+            } else if (reqCheck.data.value?.status == 2) {
+                showWin.value = true
+                // 需要注册
+                isRegister.value = true
+            } else {
+                showWin.value = true
+                isRegister.value = false
+                checkDeviceStatus.value = 2
+                checkDeviceMsg.value = reqCheck.data.value?.msg || ""
+            }
         }
-        if (reqCheck.data.value?.status == 200) {
-            checkDeviceStatus.value = 1
-        }
-    })
+    )
 
     watchEffect(() => {
         if (checkDeviceStatus.value == 1) {
@@ -107,25 +127,50 @@
         await getData()
         if (loginData.value?.status != 200) {
             // 登录失败
+            showWin.value = false
             msg.value?.show({
                 model: "error",
                 text: loginData.value?.msg || "登录失败",
             })
-            setTimeout(() => {
-                uni.reLaunch({ url: "/pages/index/index" })
-            }, 1300)
             return
         } else {
             msg.value?.show({
                 model: "success",
                 text: loginData.value?.msg || "登录成功",
             })
-            uni.setStorageSync("userInfo", JSON.parse(JSON.stringify(loginData.value?.data)))
+            uni.setStorageSync(
+                "userInfo",
+                JSON.parse(JSON.stringify(loginData.value?.data))
+            )
             setTimeout(() => {
                 uni.reLaunch({ url: "/pages/index/index" })
             }, 1300)
         }
     }
+
+    watch(
+        () => reqRegister.data.value,
+        (val) => {
+            if (val?.status == 200) {
+                // success
+                msg.value?.show({
+                    model: "success",
+                    text: val?.msg || "注册成功",
+                })
+                setTimeout(() => {
+                    reqCheck.getData()
+                }, 1500)
+            } else {
+                // error
+                msg.value?.show({
+                    model: "error",
+                    text: val?.msg || "注册失败",
+                })
+            }
+        }
+    )
+
+    const register = () => reqRegister.getData()
 </script>
 <script lang="ts">
     export default {
@@ -141,13 +186,20 @@
         >
             <view @click.stop="">
                 <tm-spin
+                    v-if="!isRegister"
                     :load="checkDeviceStatus === 0"
                     tip="验证设备..."
                 >
                     <tm-sheet
                         :width="400"
                         :height="400"
+                        style="position: relative"
                     >
+                        <tm-icon
+                            name="tmicon-redo"
+                            style="position: absolute; right: 20rpx"
+                            @click="reqCheck.getData()"
+                        ></tm-icon>
                         <tm-result
                             v-if="checkDeviceStatus === 1"
                             color="green"
@@ -163,11 +215,42 @@
                             status="error"
                             :showBtn="false"
                             :clickDisabled="false"
-                            title="验证失败"
+                            title="验证未通过"
                             :sub-title="checkDeviceMsg || '请联系管理员'"
                         ></tm-result>
                     </tm-sheet>
                 </tm-spin>
+                <tm-sheet
+                    v-else
+                    :width="400"
+                    :height="250"
+                >
+                    <view
+                        class="fulled fulled-height flex flex-col flex-center"
+                    >
+                        <tm-text
+                            label="申请注册"
+                            class="text-size-xl text-weight-b"
+                        ></tm-text>
+                        <view
+                            class="fulled flex-1 flex flex-row-center-between"
+                        >
+                            <tm-input
+                                v-model="registerFormData.gsmc"
+                                class="fulled"
+                                prefixLabel="公司"
+                                placeholder="请输入公司"
+                                :margin="[0, 24]"
+                                :maxlength="10"
+                            ></tm-input>
+                        </view>
+                        <tm-button
+                            label="申请"
+                            size="small"
+                            @click="register()"
+                        ></tm-button>
+                    </view>
+                </tm-sheet>
             </view>
         </tm-overlay>
         <view class="flex flex-col flex-center container">
@@ -216,7 +299,7 @@
                     block
                     :round="25"
                     label="登录"
-                    @click="login"
+                    @click="reqCheck.getData()"
                 ></tm-button>
             </view>
         </view>

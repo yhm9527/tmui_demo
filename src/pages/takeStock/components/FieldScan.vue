@@ -2,8 +2,8 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-21 16:23:31
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-23 16:05:27
- * @FilePath: \tmui_cli_demo\src\pages\takeStock\components\FieldScan.vue
+ * @LastEditTime: 2024-01-23 20:30:14
+ * @FilePath: \tmui_demo\src\pages\takeStock\components\FieldScan.vue
  * @Description:
  *
  * Copyright (c) 2024 by 2483677516@qq.com, All Rights Reserved.
@@ -32,8 +32,6 @@
     }
 
     const closeScan = () => {
-        // 输入框失焦
-        inputRef.value?.blur()
         show.value = false
     }
 
@@ -48,6 +46,7 @@
         sptm: "",
         sl: 1,
     }
+
     const req = useFetch(DEFAULT_API + "/Work/Savepd", {
         ...DEFAULT_FETCH_CONFIG,
         method: "POST",
@@ -64,13 +63,12 @@
         params.uname = formData?.value.uname as string
         params.sptm = value.value
         req.getData()
-        value.value = ""
     }
 
     watch(
         () => req.data.value,
         (newVal) => {
-            console.log(req.data.value)
+            value.value = ""
             if (newVal?.status == 200) {
                 if (count) {
                     count.value.number = newVal?.data?.sl
@@ -90,6 +88,14 @@
             }
         }
     )
+
+    // #ifdef APP-PLUS
+    uni.onKeyboardHeightChange((res) => {
+        if (show.value && res.height > 0) {
+            uni.hideKeyboard()
+        }
+    })
+    // #endif
 </script>
 <script lang="ts">
     export default {
@@ -97,7 +103,13 @@
     }
 </script>
 <template>
-    <tm-button
+    <tk-input
+        ref="inputRef"
+        :style="{ border: '1rpx solid green', padding: '5rpx' }"
+        v-model="value"
+        @confirm="confirm"
+    />
+    <!-- <tm-button
         size="small"
         @click="openScan"
         color="green"
@@ -114,6 +126,7 @@
                 :height="500"
             >
                 <tk-input
+                    v-if="show"
                     ref="inputRef"
                     :style="{ zIndex: '-1', position: 'absolute' }"
                     :allowEdit="true"
@@ -125,13 +138,13 @@
                     status="success"
                     :clickDisabled="false"
                     title="已开启扫码"
-                    sub-title="请使用"
+                    :sub-title="`数量${count?.number}/款数${count?.size}`"
                     btnText="关闭扫码"
                     @click="closeScan"
                 ></tm-result>
             </tm-sheet>
         </view>
-    </tm-overlay>
+    </tm-overlay> -->
 </template>
 
 <style lang="scss" scoped></style>

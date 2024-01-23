@@ -2,20 +2,21 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-21 20:12:04
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-23 16:44:07
- * @FilePath: \tmui_cli_demo\src\pages\search\search.vue
+ * @LastEditTime: 2024-01-23 20:42:36
+ * @FilePath: \tmui_demo\src\pages\search\search.vue
  * @Description:
  *
  * Copyright (c) 2024 by 2483677516@qq.com, All Rights Reserved.
 -->
 <script setup lang="ts">
     import { ref, watchEffect, watch, provide } from "vue"
+    import { onShow } from "@dcloudio/uni-app"
     import FormData from "./components/FormData.vue"
     import TakeStockItem from "./components/TakeStockItem.vue"
     import { useFetch } from "@/tmui/tool/useFun/useFetch"
     import { DEFAULT_API, DEFAULT_FETCH_CONFIG } from "@/common/config"
     import tmMessage from "@/tmui/components/tm-message/tm-message.vue"
-    import { FormDataKey, MsgKey } from "./InjectionKey"
+    import { FormDataKey, MsgKey, QueryKey } from "./InjectionKey"
 
     const msg = ref<InstanceType<typeof tmMessage> | null>(null)
     // 是否折叠
@@ -86,6 +87,11 @@
     const query = () => {
         reqList.getData()
     }
+    provide(QueryKey, query)
+
+    onShow(() => {
+        query()
+    })
 </script>
 <script lang="ts">
     export default {

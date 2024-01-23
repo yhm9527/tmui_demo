@@ -13,3 +13,6 @@ export const FormDataKey = Symbol() as InjectionKey<Ref<{
 
 // msg key
 export const MsgKey = Symbol() as InjectionKey<Ref<InstanceType<typeof tmMessage> | null>>
+
+// query key
+export const QueryKey = Symbol() as InjectionKey<() => void>
