@@ -14,7 +14,7 @@
     import FormData from "./components/FormData.vue"
     import TakeStockItem from "./components/TakeStockItem.vue"
     import { useFetch } from "@/tmui/tool/useFun/useFetch"
-    import { DEFAULT_API, DEFAULT_FETCH_CONFIG } from "@/common/config"
+    import config from "@/common/config"
     import tmMessage from "@/tmui/components/tm-message/tm-message.vue"
     import { FormDataKey, MsgKey, QueryKey } from "./InjectionKey"
 
@@ -46,8 +46,8 @@
     }
     const list = ref<TList[]>([])
     let reqListParams = { ...formData.value }
-    const reqList = useFetch(DEFAULT_API + "/Work/Getpdjtjcx", {
-        ...DEFAULT_FETCH_CONFIG,
+    const reqList = useFetch(config.API + "/Work/Getpdjtjcx", {
+        ...config.DEFAULT_FETCH_CONFIG,
         method: "POST",
         data: reqListParams,
     })

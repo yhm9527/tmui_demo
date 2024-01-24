@@ -2,7 +2,7 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-09 10:57:44
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-23 22:34:34
+ * @LastEditTime: 2024-01-24 23:34:36
  * @FilePath: \tmui_demo\src\pages\login\login.vue
  * @Description:
  *
@@ -11,7 +11,7 @@
 <script setup lang="ts">
     import { ref, reactive, computed, watchEffect, watch } from "vue"
     import { useFetch } from "@/tmui/tool/useFun/useFetch"
-    import { DEFAULT_API, DEFAULT_FETCH_CONFIG } from "@/common/config"
+    import config from "@/common/config"
     import tmMessage from "@/tmui/components/tm-message/tm-message.vue"
     // 禁用登录按钮
     const loginDisabled = ref(true)
@@ -26,8 +26,8 @@
     const checkData = reactive({
         xlh: "",
     })
-    const reqCheck = useFetch(DEFAULT_API + "/Jcinfo/Pdjsfzc", {
-        ...DEFAULT_FETCH_CONFIG,
+    const reqCheck = useFetch(config.STATIC_API + "/Jcinfo/Pdjsfzc", {
+        ...config.DEFAULT_FETCH_CONFIG,
         data: checkData,
     })
 
@@ -36,8 +36,8 @@
         gsmc: "",
     })
     const isRegister = ref(false)
-    const reqRegister = useFetch(DEFAULT_API + "/Jcinfo/Pdjsqzc", {
-        ...DEFAULT_FETCH_CONFIG,
+    const reqRegister = useFetch(config.API + "/Jcinfo/Pdjsqzc", {
+        ...config.DEFAULT_FETCH_CONFIG,
         data: registerFormData,
     })
 
@@ -62,12 +62,48 @@
     })
     // #endif
 
+    const loginFormData = reactive({
+        dydm: "",
+        pasword: "",
+    })
+
+    const getReqLogin = () => {
+        return useFetch(config.API + "/Jcinfo/Logindy", {
+            ...config.DEFAULT_FETCH_CONFIG,
+            data: loginFormData,
+        })
+    }
+    let reqLogin = getReqLogin()
+
+    watch(
+        () => reqCheck.loading.value,
+        (val) => {
+            if (val) {
+                uni.showLoading({
+                    title: "验证中...",
+                })
+            } else {
+                console.log("check", reqCheck.error.value);
+                console.log("check", reqCheck.data.value);
+                console.log("check", reqCheck.data.value.msg);
+                uni.hideLoading()
+            }
+        }
+    )
+
     watch(
         () => reqCheck.data.value,
         () => {
+            console.log("check", reqCheck.data.value)
             if (reqCheck.data.value?.status == 200) {
                 isRegister.value = false
                 checkDeviceStatus.value = 1
+                // todo 获取对应的api地址并更新
+                if (reqCheck.data.value?.data) {
+                    uni.setStorageSync("api", reqCheck.data.value?.data)
+                    config.updateApi()
+                    reqLogin = getReqLogin()
+                }
                 login()
             } else if (reqCheck.data.value?.status == 2) {
                 showWin.value = true
@@ -90,15 +126,13 @@
         }
     })
 
-    const loginFormData = reactive({
-        dydm: "",
-        pasword: "",
-    })
-
-    // #ifdef H5
-    loginFormData.dydm = "1898"
-    loginFormData.pasword = "123"
-    // #endif
+    // 获取localStorage中的登录信息
+    const tempLoginData = uni.getStorageSync("loginInfo")
+    console.log("LoginData", tempLoginData)
+    if (tempLoginData) {
+        loginFormData.dydm = tempLoginData.dydm
+        loginFormData.pasword = tempLoginData.pasword
+    }
 
     watchEffect(() => {
         loginDisabled.value = !loginFormData.dydm || !loginFormData.pasword
@@ -106,17 +140,8 @@
 
     const msg = ref<InstanceType<typeof tmMessage> | null>(null)
 
-    const {
-        loading: loginLoading,
-        data: loginData,
-        getData,
-    } = useFetch(DEFAULT_API + "/Jcinfo/Logindy", {
-        ...DEFAULT_FETCH_CONFIG,
-        data: loginFormData,
-    })
-
     watchEffect(() => {
-        if (loginLoading.value) {
+        if (reqLogin.loading.value) {
             uni.showLoading({ title: "登录中..." })
         } else {
             uni.hideLoading()
@@ -124,23 +149,29 @@
     })
 
     const login = async () => {
-        await getData()
-        if (loginData.value?.status != 200) {
+        await reqLogin.getData()
+        if (reqLogin.data.value?.status != 200) {
             // 登录失败
             showWin.value = false
             msg.value?.show({
                 model: "error",
-                text: loginData.value?.msg || "登录失败",
+                text: reqLogin.data.value?.msg || "登录失败",
             })
             return
         } else {
             msg.value?.show({
                 model: "success",
-                text: loginData.value?.msg || "登录成功",
+                text: reqLogin.data.value?.msg || "登录成功",
             })
+            // 记录登录的账号密码
+            uni.setStorageSync(
+                "loginInfo",
+                JSON.parse(JSON.stringify(loginFormData))
+            )
+            // 记录登录的用户信息
             uni.setStorageSync(
                 "userInfo",
-                JSON.parse(JSON.stringify(loginData.value?.data))
+                JSON.parse(JSON.stringify(reqLogin.data.value?.data))
             )
             setTimeout(() => {
                 uni.reLaunch({ url: "/pages/index/index" })

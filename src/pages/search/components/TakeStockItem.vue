@@ -2,7 +2,7 @@
     import { reactive, watch, ref, inject } from "vue"
     import { MsgKey, QueryKey } from "../InjectionKey"
     import { useFetch } from "@/tmui/tool/useFun/useFetch"
-    import { DEFAULT_API, DEFAULT_FETCH_CONFIG } from "@/common/config"
+    import config from "@/common/config"
     type Props = {
         data: {
             rq: string
@@ -29,14 +29,14 @@
     })
 
     // 提交
-    const reqSubmit = useFetch(DEFAULT_API + "/Work/Subdjbh", {
-        ...DEFAULT_FETCH_CONFIG,
+    const reqSubmit = useFetch(config.API + "/Work/Subdjbh", {
+        ...config.DEFAULT_FETCH_CONFIG,
         data: submitParams,
     })
 
     // 删除
-    const reqDel = useFetch(DEFAULT_API + "/Work/Delpdjdjbh", {
-        ...DEFAULT_FETCH_CONFIG,
+    const reqDel = useFetch(config.API + "/Work/Delpdjdjbh", {
+        ...config.DEFAULT_FETCH_CONFIG,
         data: {
             djbh: props.data.djbh,
             zdrid: userInfo.Dydm,

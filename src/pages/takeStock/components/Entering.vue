@@ -6,7 +6,7 @@
         CountKey,
     } from "../InjectionKey"
     import { useFetch } from "@/tmui/tool/useFun/useFetch"
-    import { DEFAULT_API, DEFAULT_FETCH_CONFIG } from "@/common/config"
+    import config from "@/common/config"
     import tmMessage from "@/tmui/components/tm-message/tm-message.vue"
     const msg = ref<InstanceType<typeof tmMessage> | null>(null)
     const formData = inject(TakeStockFormDataKey)
@@ -62,8 +62,8 @@
         listyc: [] as any[],
     }
 
-    const req = useFetch(DEFAULT_API + "/Work/Savepdsr", {
-        ...DEFAULT_FETCH_CONFIG,
+    const req = useFetch(config.API + "/Work/Savepdsr", {
+        ...config.DEFAULT_FETCH_CONFIG,
         method: "POST",
         data: params,
     })

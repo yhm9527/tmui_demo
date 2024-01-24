@@ -2,7 +2,7 @@
     import { ref, inject, reactive, watchEffect, computed } from "vue"
     import { FormDataKey } from "../InjectionKey"
     import { useFetch } from "@/tmui/tool/useFun/useFetch"
-    import { DEFAULT_API, DEFAULT_FETCH_CONFIG } from "@/common/config"
+    import config from "@/common/config"
 
     const formData = inject(FormDataKey)
 
@@ -16,8 +16,8 @@
     })
 
     // 定义request
-    const req = useFetch(DEFAULT_API + "/Work/GetCangku", {
-        ...DEFAULT_FETCH_CONFIG,
+    const req = useFetch(config.API + "/Work/GetCangku", {
+        ...config.DEFAULT_FETCH_CONFIG,
         data: params,
     })
 

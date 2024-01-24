@@ -19,7 +19,7 @@
     import FormData from "./components/FormData.vue"
     import Entering from "./components/Entering.vue"
     import { useFetch } from "@/tmui/tool/useFun/useFetch"
-    import { DEFAULT_API, DEFAULT_FETCH_CONFIG } from "@/common/config"
+    import config from "@/common/config"
 
     const formData = ref({
         djbh: "",
@@ -76,8 +76,8 @@
     })
 
     // 请求goods
-    const reqGoodsData = useFetch(DEFAULT_API + "/Work/Getspyscmxx", {
-        ...DEFAULT_FETCH_CONFIG,
+    const reqGoodsData = useFetch(config.API + "/Work/Getspyscmxx", {
+        ...config.DEFAULT_FETCH_CONFIG,
         data: reqGoodsDataParams,
     })
 
@@ -124,8 +124,8 @@
             p.djbh = val
         }
     )
-    const reqData = useFetch(DEFAULT_API + "/Work/Getpdjxfhsj", {
-        ...DEFAULT_FETCH_CONFIG,
+    const reqData = useFetch(config.API + "/Work/Getpdjxfhsj", {
+        ...config.DEFAULT_FETCH_CONFIG,
         data: p,
     })
     onLoad((e: any) => {

@@ -11,15 +11,15 @@
 <script setup lang="ts">
     import { ref, inject, watch, computed } from "vue"
     import { useFetch } from "@/tmui/tool/useFun/useFetch"
-    import { DEFAULT_API, DEFAULT_FETCH_CONFIG } from "@/common/config"
+    import config from "@/common/config"
     import { TakeStockFormDataKey } from "../InjectionKey"
 
     const show = ref(false)
     const list = ref<any[]>([])
 
     const formData = inject(TakeStockFormDataKey)
-    const req = useFetch(DEFAULT_API + "/Work/Getspjg", {
-        ...DEFAULT_FETCH_CONFIG,
+    const req = useFetch(config.API + "/Work/Getspjg", {
+        ...config.DEFAULT_FETCH_CONFIG,
     })
 
     req.getData()

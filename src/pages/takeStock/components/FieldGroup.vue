@@ -11,7 +11,7 @@
 <script setup lang="ts">
     import { ref, inject, watch, computed } from "vue"
     import { useFetch } from "@/tmui/tool/useFun/useFetch"
-    import { DEFAULT_API, DEFAULT_FETCH_CONFIG } from "@/common/config"
+    import config from "@/common/config"
     import { TakeStockFormDataKey } from "../InjectionKey"
 
     const formData = inject(TakeStockFormDataKey)
@@ -20,8 +20,8 @@
     const params = {
         ckdm: "",
     }
-    const req = useFetch(DEFAULT_API + "/Work/GetKuwei", {
-        ...DEFAULT_FETCH_CONFIG,
+    const req = useFetch(config.API + "/Work/GetKuwei", {
+        ...config.DEFAULT_FETCH_CONFIG,
         data: params,
     })
 

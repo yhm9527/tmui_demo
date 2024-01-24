@@ -12,7 +12,7 @@
     import { ref, inject, computed, watch } from "vue"
     import { TakeStockFormDataKey } from "../InjectionKey"
     import { useFetch } from "@/tmui/tool/useFun/useFetch"
-    import { DEFAULT_API, DEFAULT_FETCH_CONFIG } from "@/common/config"
+    import config from "@/common/config"
     import FieldDate from "./FieldDate.vue"
     import FieldShop from "./FieldShop.vue"
     import FieldGroup from "./FieldGroup.vue"
@@ -34,8 +34,8 @@
         return true
     })
 
-    const reqOpenCode = useFetch(DEFAULT_API + "/Work/Getpddh", {
-        ...DEFAULT_FETCH_CONFIG,
+    const reqOpenCode = useFetch(config.API + "/Work/Getpddh", {
+        ...config.DEFAULT_FETCH_CONFIG,
     })
 
     watch(

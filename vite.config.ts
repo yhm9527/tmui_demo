@@ -2,7 +2,7 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-17 21:07:25
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-17 22:50:44
+ * @LastEditTime: 2024-01-24 21:59:51
  * @FilePath: \tmui_demo\vite.config.ts
  * @Description:
  *
@@ -33,6 +33,11 @@ export default defineConfig({
 				target: 'https://xxcx.myhxsmbh.com:4438/api',
 				changeOrigin: true,
 				rewrite: (path) => path.replace(/^\/api/, ''),
+			},
+			'/static_api': {
+				target: 'https://xxcx.myhxsmbh.com:4438/api',
+				changeOrigin: true,
+				rewrite: (path) => path.replace(/^\/static_api/, ''),
 			},
 		}
 	},

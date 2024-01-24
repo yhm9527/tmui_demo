@@ -12,7 +12,7 @@
     import { ref, inject, nextTick, watch } from "vue"
     import { TakeStockFormDataKey, CountKey } from "../InjectionKey"
     import { useFetch } from "@/tmui/tool/useFun/useFetch"
-    import { DEFAULT_API, DEFAULT_FETCH_CONFIG } from "@/common/config"
+    import config from "@/common/config"
     import TkInput from "@/uni_modules/tk-input/components/tk-input/tk-input.vue"
     const formData = inject(TakeStockFormDataKey)
     const count = inject(CountKey)
@@ -47,8 +47,8 @@
         sl: 1,
     }
 
-    const req = useFetch(DEFAULT_API + "/Work/Savepd", {
-        ...DEFAULT_FETCH_CONFIG,
+    const req = useFetch(config.API + "/Work/Savepd", {
+        ...config.DEFAULT_FETCH_CONFIG,
         method: "POST",
         data: params,
     })

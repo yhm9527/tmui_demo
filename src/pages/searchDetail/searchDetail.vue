@@ -12,7 +12,7 @@
     import { ref, reactive, watch } from "vue"
     import { onLoad } from "@dcloudio/uni-app"
     import { useFetch } from "@/tmui/tool/useFun/useFetch"
-    import { DEFAULT_API, DEFAULT_FETCH_CONFIG } from "@/common/config"
+    import config from "@/common/config"
     import tmMessage from "@/tmui/components/tm-message/tm-message.vue"
     const msg = ref<InstanceType<typeof tmMessage> | null>(null)
     const isDelete = ref(false)
@@ -32,8 +32,8 @@
     }
     const tempItem = ref<Item>()
     const list = ref<Item[]>([])
-    const reqList = useFetch(DEFAULT_API + "/Work/Sppdquerydh", {
-        ...DEFAULT_FETCH_CONFIG,
+    const reqList = useFetch(config.API + "/Work/Sppdquerydh", {
+        ...config.DEFAULT_FETCH_CONFIG,
         data: params,
     })
     const delParams = reactive({
@@ -41,8 +41,8 @@
         djbh: "",
         spdm: "",
     })
-    const reqDelete = useFetch(DEFAULT_API + "/Work/Delspycmx", {
-        ...DEFAULT_FETCH_CONFIG,
+    const reqDelete = useFetch(config.API + "/Work/Delspycmx", {
+        ...config.DEFAULT_FETCH_CONFIG,
         data: delParams,
     })
     onLoad((e: any) => {
