@@ -50,11 +50,12 @@
         tempId.value = item.Khdm
     }
     const confirm = () => {
-        if(!formData){
+        if (!formData) {
             return
         }
         formData.value.Ckdm = tempId.value
     }
+    const systemInfo = ref(uni.getSystemInfoSync())
 </script>
 <script lang="ts">
     export default {
@@ -79,36 +80,49 @@
     <tm-drawer
         placement="bottom"
         v-model:show="show"
+        :height="1000"
         @ok="confirm"
     >
-        <view
-            class="px-20 flex flex-col"
-            style="height: 100%"
-        >
-            <tm-input
-                v-model="params.search"
-                :searchWidth="120"
-                @search="search"
-                prefix="tmicon-search"
-                searchLabel="搜索"
-            ></tm-input>
-            <view
-                class="flex-1 flex flex-col py-20"
-                style="overflow-y: auto"
-            >
-                <view
-                    v-for="(item, index) in shopList"
-                    :key="item.Khdm"
-                    @click="tempActive(item)"
-                >
-                    <tm-text
-                        class="px-20"
-                        :color="tempId == item.Khdm ? 'blue' : ''"
-                        >{{ item.Khmc }}</tm-text
-                    >
-                    <tm-divider v-if="index < shopList.length - 1"></tm-divider>
-                </view>
+        <view class="flex flex-col flex-col-center-center fulled fulled-height">
+            <view class="fulled">
+                <tm-input
+                    :margin="[20, 0, 20, 20]"
+                    v-model="params.search"
+                    :searchWidth="120"
+                    @search="search"
+                    prefix="tmicon-search"
+                    searchLabel="搜索"
+                ></tm-input>
             </view>
+            <tm-virtual-list
+                :scrollViewInTo="''"
+                :width="systemInfo?.windowWidth"
+                :height="800"
+                :data="shopList"
+                :itemHeight="80"
+            >
+                <template v-slot:default="{ data }">
+                    <tm-sheet
+                        :style="{ width: systemInfo?.windowWidth + 'px' }"
+                        :border="1"
+                        borderDirection="bottom"
+                        :height="80"
+                        _class="flex flex-row flex-row-center-start"
+                        :padding="[0, 0]"
+                        :margin="[0, 0]"
+                        v-for="(item, index) in data"
+                        :key="index"
+                        @click="tempActive(item)"
+                    >
+                        <tm-text
+                            class="px-20"
+                            :color="tempId == item.Khdm ? 'blue' : ''"
+                            :label="item.Khmc"
+                        >
+                        </tm-text>
+                    </tm-sheet>
+                </template>
+            </tm-virtual-list>
         </view>
     </tm-drawer>
 </template>

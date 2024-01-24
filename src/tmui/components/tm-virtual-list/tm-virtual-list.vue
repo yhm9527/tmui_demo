@@ -11,7 +11,7 @@
 				{
 					height: rootHeight + 'px',
 					'overflow-anchor': 'auto',
-					width: `${props.width}rpx`
+					width: `${props.width}px`
 				}
 			]"
 		>
@@ -52,7 +52,7 @@
  * <tm-virtual-list :width="750" :height="800" :data="imglist" :itemHeight="160">
     <template v-slot:default="{data}">
       <tm-image-group >
-        <tm-image :padding="[5,5]" preview :width="750" :height="150" :src="item" 
+        <tm-image :padding="[5,5]" preview :width="750" :height="150" :src="item"
         v-for="(item,index) in data" :key="index"></tm-image>
       </tm-image-group>
     </template>
