@@ -2,7 +2,7 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-19 11:35:31
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-22 17:03:01
+ * @LastEditTime: 2024-01-25 16:59:48
  * @FilePath: \tmui_cli_demo\src\pages\takeStock\components\FieldGroup.vue
  * @Description:
  *
@@ -36,7 +36,11 @@
     watch(
         () => req.data.value?.data,
         (val) => {
+            const bool = list.value.length === 0 && val.length > 0
             list.value = val
+            if(bool && formData && !formData.value.kwdm){
+                formData.value.kwdm = val[0].Kwdm
+            }
         }
     )
 

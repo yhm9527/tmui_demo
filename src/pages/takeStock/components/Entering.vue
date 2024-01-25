@@ -103,6 +103,7 @@
                 if (count) {
                     count.value.number = newVal?.data?.sl
                     count.value.size = newVal?.data?.ks
+                    count.value.latestShop = newVal?.data?.spxx
                 }
                 initTempList()
                 uni.showToast({
@@ -155,7 +156,12 @@
                 </view>
             </tm-col>
         </tm-row>
-        <tm-divider />
+        <tm-row v-if="count?.latestShop" :column="1">
+            <tm-col align="start">
+                <tm-text :label="count?.latestShop"></tm-text>
+            </tm-col>
+        </tm-row>
+        <tm-divider :margin="[0,10]" />
         <!-- 商品,保存 -->
         <view class="flex flex-row-center-between">
             <tm-text

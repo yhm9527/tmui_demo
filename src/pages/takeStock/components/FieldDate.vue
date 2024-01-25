@@ -2,15 +2,16 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-19 14:08:00
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-22 16:59:56
+ * @LastEditTime: 2024-01-25 17:04:24
  * @FilePath: \tmui_cli_demo\src\pages\takeStock\components\FieldDate.vue
  * @Description:
  *
  * Copyright (c) 2024 by 2483677516@qq.com, All Rights Reserved.
 -->
 <script setup lang="ts">
-    import { ref, inject } from "vue"
+    import { ref, inject, nextTick, onMounted } from "vue"
     import { TakeStockFormDataKey } from "../InjectionKey"
+    import { useDateFormat } from "@vueuse/core"
     const formData = inject(TakeStockFormDataKey)
     // 显示时间选择
     const show = ref(false)
@@ -20,6 +21,10 @@
         }
         show.value = true
     }
+    onMounted(() => nextTick(() => {
+        const nowData = useDateFormat(new Date(), "YYYY-MM-DD").value
+        if(formData && !formData.value.rq) formData.value.rq = nowData
+    }))
 </script>
 <script lang="ts">
     export default {

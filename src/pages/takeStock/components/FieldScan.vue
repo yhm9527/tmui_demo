@@ -2,8 +2,8 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-21 16:23:31
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-23 20:30:14
- * @FilePath: \tmui_demo\src\pages\takeStock\components\FieldScan.vue
+ * @LastEditTime: 2024-01-25 17:14:05
+ * @FilePath: \tmui_cli_demo\src\pages\takeStock\components\FieldScan.vue
  * @Description:
  *
  * Copyright (c) 2024 by 2483677516@qq.com, All Rights Reserved.
@@ -73,6 +73,7 @@
                 if (count) {
                     count.value.number = newVal?.data?.sl
                     count.value.size = newVal?.data?.ks
+                    count.value.latestShop = newVal?.data?.spxx
                 }
                 // success
                 uni.showToast({

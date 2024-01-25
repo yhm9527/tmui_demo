@@ -104,12 +104,19 @@
             :column="2"
         >
             <tm-col align="start">
-                <tm-text :label="`日期: ${props.data.rq}`"></tm-text>
+                <tm-text
+                    :font-size="26"
+                    :label="`日期: ${props.data.rq}`"
+                ></tm-text>
             </tm-col>
             <tm-col align="start">
                 <view class="flex">
-                    <tm-text label="单号: "></tm-text>
                     <tm-text
+                        :font-size="26"
+                        label="单号: "
+                    ></tm-text>
+                    <tm-text
+                        :font-size="26"
                         color="blue"
                         style="margin-left: 8rpx"
                         :label="props.data.djbh"
@@ -118,24 +125,33 @@
                 </view>
             </tm-col>
             <tm-col align="start">
-                <tm-text :label="`商店: ${props.data.sdmc}`"></tm-text>
+                <tm-text
+                    :font-size="26"
+                    :label="`商店: ${props.data.sdmc}`"
+                ></tm-text>
             </tm-col>
             <tm-col align="start">
-                <tm-text :label="`库位: ${props.data.kwmc}`"></tm-text>
+                <tm-text
+                    :font-size="26"
+                    :label="`库位: ${props.data.kwmc}`"
+                ></tm-text>
             </tm-col>
         </tm-row>
         <tm-row
             :gutter="5"
-            :column="3"
+            :column="2"
         >
             <tm-col align="start">
-                <tm-text :label="`制单人: ${props.data.zdrmc}`"></tm-text>
+                <tm-text
+                    :font-size="26"
+                    :label="`制单人: ${props.data.zdrmc}`"
+                ></tm-text>
             </tm-col>
             <tm-col align="start">
-                <tm-text :label="`数量: ${props.data.sl}`"></tm-text>
-            </tm-col>
-            <tm-col align="start">
-                <tm-text :label="`状态: ${props.data.ztmc}`"></tm-text>
+                <tm-text
+                    :font-size="26"
+                    :label="`数量: ${props.data.sl}  状态: ${props.data.ztmc}`"
+                ></tm-text>
             </tm-col>
         </tm-row>
 

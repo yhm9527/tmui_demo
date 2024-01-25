@@ -2,14 +2,36 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-09 14:32:52
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-21 20:13:45
- * @FilePath: \tmui_demo\src\pages\index\index.nvue
+ * @LastEditTime: 2024-01-25 16:38:44
+ * @FilePath: \tmui_cli_demo\src\pages\index\index.nvue
  * @Description:
  *
  * Copyright (c) 2024 by 2483677516@qq.com, All Rights Reserved.
 -->
 <script setup lang="ts">
-    import {} from "vue"
+    import { watch } from "vue"
+    import { useFetch } from "@/tmui/tool/useFun/useFetch"
+    import config from "@/common/config"
+    const userInfo = uni.getStorageSync("userInfo")
+    const reqShop = useFetch(config.API + "/Work/GetCangkuuser",{
+        ...config.DEFAULT_FETCH_CONFIG,
+        data: {
+            login: userInfo.Dydm
+        },
+        showLoading: true
+    })
+    watch(
+        ()=>reqShop.data.value,
+        (val)=>{
+            if(val?.status == 200){
+                if(val?.data?.length){
+                   // todo 存储商店/仓库地址
+                   uni.setStorageSync('shopData',val?.data?.at(0))
+                }
+            }
+        }
+    )
+    reqShop.getData()
     const goTakeStock = () => {
         uni.navigateTo({ url: "/pages/takeStock/takeStock" })
     }

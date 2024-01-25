@@ -172,7 +172,7 @@
 		},
 		errHeight: {
 			type: Number,
-			default: 30
+			default: 20
 		},
 		labelWidth: {
 			type: Number,
@@ -369,7 +369,7 @@
 
 			var typeStr = gettype.call(tmpVal)
 			/*
-	
+
 								"[object String]";
 								"[object Number]";
 								"[object Boolean]"

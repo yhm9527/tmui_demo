@@ -32,4 +32,5 @@ export const TakeStockGoodsDetailKey = Symbol() as InjectionKey<{
 export const CountKey = Symbol() as InjectionKey<Ref<{
     number: number
     size: number
+    latestShop: string
 }>>

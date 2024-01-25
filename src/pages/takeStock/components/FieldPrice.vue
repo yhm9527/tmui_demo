@@ -2,7 +2,7 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-19 13:46:24
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-22 17:04:10
+ * @LastEditTime: 2024-01-25 16:58:37
  * @FilePath: \tmui_cli_demo\src\pages\takeStock\components\FieldPrice.vue
  * @Description:
  *
@@ -27,13 +27,20 @@
     watch(
         () => req.data.value?.data,
         (val) => {
+            const bool = list.value.length === 0 && val.length > 0
             list.value = val
+            if(bool && formData && !formData.value.djlx){
+                formData.value.djlx = val[0].jgdm
+            }
         }
     )
 
     const tempId = ref("")
     const activeValue = computed(() => {
-        return list.value.find((item) => item.jgdm === formData?.value.djlx)?.jgmc || ""
+        return (
+            list.value.find((item) => item.jgdm === formData?.value.djlx)
+                ?.jgmc || ""
+        )
     })
 
     const showDrawer = () => {

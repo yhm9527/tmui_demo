@@ -2,8 +2,8 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-09 10:57:44
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-24 23:34:36
- * @FilePath: \tmui_demo\src\pages\login\login.vue
+ * @LastEditTime: 2024-01-25 16:30:36
+ * @FilePath: \tmui_cli_demo\src\pages\login\login.vue
  * @Description:
  *
  * Copyright (c) 2024 by 2483677516@qq.com, All Rights Reserved.
@@ -83,9 +83,6 @@
                     title: "验证中...",
                 })
             } else {
-                console.log("check", reqCheck.error.value);
-                console.log("check", reqCheck.data.value);
-                console.log("check", reqCheck.data.value.msg);
                 uni.hideLoading()
             }
         }

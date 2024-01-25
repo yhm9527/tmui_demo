@@ -2,7 +2,7 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-18 21:13:45
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-23 17:56:31
+ * @LastEditTime: 2024-01-25 17:13:07
  * @FilePath: \tmui_cli_demo\src\pages\takeStock\takeStock.vue
  * @Description:
  *
@@ -39,6 +39,8 @@
         number: 0,
         // 款数
         size: 0,
+        // 最后一个商品
+        latestShop: "",
     })
     provide(CountKey, count)
 
