@@ -2,7 +2,7 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-18 18:37:51
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-24 23:36:51
+ * @LastEditTime: 2024-01-27 21:10:13
  * @FilePath: \tmui_demo\src\common\config.ts
  * @Description:
  *
@@ -11,12 +11,6 @@
 let API = '';
 let STATIC_API = '';
 // #ifdef APP-PLUS
-const api = uni.getStorageSync('api')
-if (api) {
-    API = api+'/api'
-} else {
-    API = import.meta.env.VITE_API_URL
-}
 STATIC_API = import.meta.env.VITE_STATIC_API_URL
 // #endif
 

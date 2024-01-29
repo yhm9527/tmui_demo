@@ -2,8 +2,8 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-09 10:57:44
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-25 16:30:36
- * @FilePath: \tmui_cli_demo\src\pages\login\login.vue
+ * @LastEditTime: 2024-01-27 22:53:33
+ * @FilePath: \tmui_demo\src\pages\login\login.vue
  * @Description:
  *
  * Copyright (c) 2024 by 2483677516@qq.com, All Rights Reserved.
@@ -19,48 +19,6 @@
     const passwordType = computed<any>(() => {
         return showPassword.value ? "text" : "password"
     })
-    // 显示遮罩层,验证当前设备
-    const showWin = ref(false)
-    const checkDeviceStatus = ref(0) // 0未验证 1验证成功 2验证失败
-    const checkDeviceMsg = ref("")
-    const checkData = reactive({
-        xlh: "",
-    })
-    const reqCheck = useFetch(config.STATIC_API + "/Jcinfo/Pdjsfzc", {
-        ...config.DEFAULT_FETCH_CONFIG,
-        data: checkData,
-    })
-
-    const registerFormData = reactive({
-        xlh: "",
-        gsmc: "",
-    })
-    const isRegister = ref(false)
-    const reqRegister = useFetch(config.API + "/Jcinfo/Pdjsqzc", {
-        ...config.DEFAULT_FETCH_CONFIG,
-        data: registerFormData,
-    })
-
-    // #ifdef H5
-    checkData.xlh = "d42383549ac743edb873932e78cc076d11"
-    registerFormData.xlh = "d42383549ac743edb873932e78cc076d11"
-    // #endif
-
-    // #ifdef APP-PLUS
-    // todo 目前不检测当前设备
-    plus.device.getInfo({
-        success: (info) => {
-            console.log("设备信息", info)
-            checkData.xlh = info.uuid
-            registerFormData.xlh = info.uuid
-            // 验证当前设备是否可用
-        },
-        fail: (error) => {
-            checkDeviceStatus.value = 2
-            checkDeviceMsg.value = error.message
-        },
-    })
-    // #endif
 
     const loginFormData = reactive({
         dydm: "",
@@ -68,60 +26,12 @@
     })
 
     const getReqLogin = () => {
+        console.log('>>>>>>>>>>>>>>>look api', config.API);
         return useFetch(config.API + "/Jcinfo/Logindy", {
             ...config.DEFAULT_FETCH_CONFIG,
             data: loginFormData,
         })
     }
-    let reqLogin = getReqLogin()
-
-    watch(
-        () => reqCheck.loading.value,
-        (val) => {
-            if (val) {
-                uni.showLoading({
-                    title: "验证中...",
-                })
-            } else {
-                uni.hideLoading()
-            }
-        }
-    )
-
-    watch(
-        () => reqCheck.data.value,
-        () => {
-            console.log("check", reqCheck.data.value)
-            if (reqCheck.data.value?.status == 200) {
-                isRegister.value = false
-                checkDeviceStatus.value = 1
-                // todo 获取对应的api地址并更新
-                if (reqCheck.data.value?.data) {
-                    uni.setStorageSync("api", reqCheck.data.value?.data)
-                    config.updateApi()
-                    reqLogin = getReqLogin()
-                }
-                login()
-            } else if (reqCheck.data.value?.status == 2) {
-                showWin.value = true
-                // 需要注册
-                isRegister.value = true
-            } else {
-                showWin.value = true
-                isRegister.value = false
-                checkDeviceStatus.value = 2
-                checkDeviceMsg.value = reqCheck.data.value?.msg || ""
-            }
-        }
-    )
-
-    watchEffect(() => {
-        if (checkDeviceStatus.value == 1) {
-            setTimeout(() => {
-                showWin.value = false
-            }, 1300)
-        }
-    })
 
     // 获取localStorage中的登录信息
     const tempLoginData = uni.getStorageSync("loginInfo")
@@ -137,28 +47,21 @@
 
     const msg = ref<InstanceType<typeof tmMessage> | null>(null)
 
-    watchEffect(() => {
-        if (reqLogin.loading.value) {
-            uni.showLoading({ title: "登录中..." })
-        } else {
-            uni.hideLoading()
-        }
-    })
-
     const login = async () => {
+        const reqLogin = getReqLogin()
         await reqLogin.getData()
-        if (reqLogin.data.value?.status != 200) {
+        const val = reqLogin.data.value
+        if (val?.status != 200) {
             // 登录失败
-            showWin.value = false
             msg.value?.show({
                 model: "error",
-                text: reqLogin.data.value?.msg || "登录失败",
+                text: val?.msg || "登录失败",
             })
             return
         } else {
             msg.value?.show({
                 model: "success",
-                text: reqLogin.data.value?.msg || "登录成功",
+                text: val?.msg || "登录成功",
             })
             // 记录登录的账号密码
             uni.setStorageSync(
@@ -168,7 +71,7 @@
             // 记录登录的用户信息
             uni.setStorageSync(
                 "userInfo",
-                JSON.parse(JSON.stringify(reqLogin.data.value?.data))
+                JSON.parse(JSON.stringify(val?.data))
             )
             setTimeout(() => {
                 uni.reLaunch({ url: "/pages/index/index" })
@@ -176,29 +79,6 @@
         }
     }
 
-    watch(
-        () => reqRegister.data.value,
-        (val) => {
-            if (val?.status == 200) {
-                // success
-                msg.value?.show({
-                    model: "success",
-                    text: val?.msg || "注册成功",
-                })
-                setTimeout(() => {
-                    reqCheck.getData()
-                }, 1500)
-            } else {
-                // error
-                msg.value?.show({
-                    model: "error",
-                    text: val?.msg || "注册失败",
-                })
-            }
-        }
-    )
-
-    const register = () => reqRegister.getData()
 </script>
 <script lang="ts">
     export default {
@@ -207,80 +87,6 @@
 </script>
 <template>
     <tm-app>
-        <tm-overlay
-            v-model:show="showWin"
-            contentAnimation
-            :overlayClick="false"
-        >
-            <view @click.stop="">
-                <tm-spin
-                    v-if="!isRegister"
-                    :load="checkDeviceStatus === 0"
-                    tip="验证设备..."
-                >
-                    <tm-sheet
-                        :width="400"
-                        :height="400"
-                        style="position: relative"
-                    >
-                        <tm-icon
-                            name="tmicon-redo"
-                            style="position: absolute; right: 20rpx"
-                            @click="reqCheck.getData()"
-                        ></tm-icon>
-                        <tm-result
-                            v-if="checkDeviceStatus === 1"
-                            color="green"
-                            status="success"
-                            :showBtn="false"
-                            :clickDisabled="false"
-                            title="验证成功"
-                            sub-title="欢迎使用"
-                        ></tm-result>
-                        <tm-result
-                            v-else-if="checkDeviceStatus === 2"
-                            color="red"
-                            status="error"
-                            :showBtn="false"
-                            :clickDisabled="false"
-                            title="验证未通过"
-                            :sub-title="checkDeviceMsg || '请联系管理员'"
-                        ></tm-result>
-                    </tm-sheet>
-                </tm-spin>
-                <tm-sheet
-                    v-else
-                    :width="400"
-                    :height="250"
-                >
-                    <view
-                        class="fulled fulled-height flex flex-col flex-center"
-                    >
-                        <tm-text
-                            label="申请注册"
-                            class="text-size-xl text-weight-b"
-                        ></tm-text>
-                        <view
-                            class="fulled flex-1 flex flex-row-center-between"
-                        >
-                            <tm-input
-                                v-model="registerFormData.gsmc"
-                                class="fulled"
-                                prefixLabel="公司"
-                                placeholder="请输入公司"
-                                :margin="[0, 24]"
-                                :maxlength="10"
-                            ></tm-input>
-                        </view>
-                        <tm-button
-                            label="申请"
-                            size="small"
-                            @click="register()"
-                        ></tm-button>
-                    </view>
-                </tm-sheet>
-            </view>
-        </tm-overlay>
         <view class="flex flex-col flex-center container">
             <view class="item">
                 <tm-text
@@ -327,7 +133,7 @@
                     block
                     :round="25"
                     label="登录"
-                    @click="reqCheck.getData()"
+                    @click="login()"
                 ></tm-button>
             </view>
         </view>

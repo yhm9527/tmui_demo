@@ -2,8 +2,8 @@
     "name" : "盘点",
     "appid" : "__UNI__A571A10",
     "description" : "",
-    "versionName" : "3.1.09",
-    "versionCode" : "100",
+    "versionName" : "1.0.2",
+    "versionCode" : 102,
     "transformPx" : false,
     "app-plus" : {
         "usingComponents" : true,

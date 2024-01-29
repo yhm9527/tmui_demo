@@ -2,8 +2,8 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-19 09:27:07
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-25 17:26:43
- * @FilePath: \tmui_cli_demo\src\pages\takeStock\components\FormData.vue
+ * @LastEditTime: 2024-01-28 11:08:05
+ * @FilePath: \tmui_demo\src\pages\takeStock\components\FormData.vue
  * @Description:
  *
  * Copyright (c) 2024 by 2483677516@qq.com, All Rights Reserved.
@@ -19,7 +19,7 @@
     import FieldPrice from "./FieldPrice.vue"
     import FieldGoods from "./FieldGoods.vue"
     import FieldScan from "./FieldScan.vue"
-
+    const userInfo = uni.getStorageSync("userInfo")
     const formData = inject(TakeStockFormDataKey)
     const openCodeDisabled = computed(() => {
         if (
@@ -49,7 +49,9 @@
     )
     const goSearchDetail = () => {
         uni.navigateTo({
-            url: "/pages/searchDetail/searchDetail?isDelete=1&code=" + formData?.value.djbh,
+            url:
+                "/pages/searchDetail/searchDetail?isDelete=1&code=" +
+                formData?.value.djbh,
         })
     }
 </script>
@@ -59,94 +61,137 @@
     }
 </script>
 <template>
-    <tm-form
-        v-if="formData"
-        ref="form"
-        :label-width="150"
-        v-model="formData"
+    <tm-sheet
+        :margin="[24]"
         :round="[5]"
-        :margin="[24, 24]"
     >
-        <tm-form-item :margin="[0, 0]" :err-height="10">
-            <view class="flex px-20">
-                <tm-button
-                    :disabled="openCodeDisabled"
-                    label="开单"
-                    :margin="[10]"
-                    size="small"
-                    @click="reqOpenCode.getData()"
-                ></tm-button>
-                <tm-button
-                    :disabled="formData?.djbh == ''"
-                    color="green"
-                    label="查询"
-                    :margin="[10]"
-                    size="small"
-                    @click="goSearchDetail()"
-                ></tm-button>
-            </view>
-        </tm-form-item>
-        <tm-form-item
+        <view class="flex mb-10">
+            <tm-text
+                _class="mr-20"
+                :font-size="32"
+                :label="'账号: ' + userInfo.Dydm"
+            ></tm-text>
+            <tm-text
+                :font-size="32"
+                :label="'名称: ' + userInfo.Dymc"
+            ></tm-text>
+        </view>
+        <view class="flex mb-10">
+            <tm-button
+                :disabled="openCodeDisabled"
+                label="开单"
+                :margin="[0, 0]"
+                size="small"
+                :font-size="32"
+                @click="reqOpenCode.getData()"
+            ></tm-button>
+            <tm-button
+                :disabled="formData?.djbh == ''"
+                color="green"
+                label="查询"
+                :margin="[40, 0, 0, 0]"
+                size="small"
+                :font-size="32"
+                @click="goSearchDetail()"
+            ></tm-button>
+        </view>
+        <view
+            class="flex mb-10"
             v-if="formData?.djbh"
-            label="单号"
-            field="djbh"
-            :margin="[0, 0]"
         >
             <tm-text
-                :userInteractionEnabled="false"
+                _class="mr-20"
+                :font-size="32"
+                label="单号"
+            ></tm-text>
+            <tm-text
+                :font-size="32"
                 :label="formData?.djbh"
             ></tm-text>
-        </tm-form-item>
-        <tm-form-item
-            required
-            label="日期"
-            field="rq"
-            :margin="[0, 0]"
+        </view>
+        <tm-row
+            :gutter="5"
+            :column="2"
         >
-            <field-date></field-date>
-        </tm-form-item>
-        <tm-form-item
-            required
-            label="商店"
-            field="ckdm"
-            :margin="[0, 0]"
+            <tm-col align="start">
+                <view class="flex">
+                    <tm-text
+                        _class="mr-20"
+                        :font-size="32"
+                        label="日期"
+                    ></tm-text>
+                    <field-date></field-date>
+                </view>
+            </tm-col>
+            <tm-col align="start">
+                <view class="flex">
+                    <tm-text
+                        _class="mr-20"
+                        :font-size="32"
+                        label="价格"
+                    ></tm-text>
+                    <field-price></field-price>
+                </view>
+            </tm-col>
+        </tm-row>
+        <tm-row
+            :gutter="5"
+            :column="2"
         >
-            <field-shop></field-shop>
-        </tm-form-item>
-        <tm-form-item
-            required
-            label="柜组"
-            field="kwdm"
-            :margin="[0, 0]"
+            <tm-col align="start">
+                <view class="flex">
+                    <tm-text
+                        _class="mr-20"
+                        :font-size="32"
+                        label="商店"
+                    ></tm-text>
+                    <field-shop></field-shop>
+                </view>
+            </tm-col>
+            <tm-col align="start">
+                <view class="flex">
+                    <tm-text
+                        _class="mr-20"
+                        :font-size="32"
+                        label="柜组"
+                    ></tm-text>
+                    <field-group></field-group>
+                </view>
+            </tm-col>
+        </tm-row>
+        <tm-row
+            :column="1"
+            :height="80"
+            v-if="formData?.djbh"
         >
-            <field-group></field-group>
-        </tm-form-item>
-        <tm-form-item
-            required
-            label="价格"
-            field="time"
-            :margin="[0, 0]"
-            :border="!!formData.djbh"
+            <tm-col align="start">
+                <view class="flex flex-row-center-between">
+                    <tm-text
+                        _class="mr-20"
+                        :font-size="32"
+                        label="扫描录入"
+                    ></tm-text>
+                    <field-scan></field-scan>
+                </view>
+            </tm-col>
+        </tm-row>
+        <tm-row
+            :column="1"
+            v-if="formData?.djbh"
+            :height="80"
         >
-            <field-price></field-price>
-        </tm-form-item>
-        <!-- 扫描录入 -->
-        <tm-form-item
-            v-show="formData.djbh"
-            label="扫描录入"
-            :margin="[0, 0]"
-        >
-            <field-scan></field-scan>
-        </tm-form-item>
-        <tm-form-item
-            v-show="formData.djbh"
-            label="商品"
-            :border="false"
-            :margin="[0, 0]"
-        >
-            <field-goods></field-goods>
-        </tm-form-item>
-    </tm-form>
+            <tm-col align="start">
+                <view class="flex flex-row-center-between">
+                    <tm-text
+                        _class="mr-20"
+                        :font-size="32"
+                        label="商品"
+                    ></tm-text>
+                    <field-goods></field-goods>
+                </view>
+            </tm-col>
+        </tm-row>
+    </tm-sheet>
 </template>
 
 <style lang="scss" scoped></style>

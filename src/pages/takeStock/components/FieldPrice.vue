@@ -2,8 +2,8 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-19 13:46:24
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-25 16:58:37
- * @FilePath: \tmui_cli_demo\src\pages\takeStock\components\FieldPrice.vue
+ * @LastEditTime: 2024-01-27 14:03:07
+ * @FilePath: \tmui_demo\src\pages\takeStock\components\FieldPrice.vue
  * @Description:
  *
  * Copyright (c) 2024 by 2483677516@qq.com, All Rights Reserved.
@@ -29,7 +29,7 @@
         (val) => {
             const bool = list.value.length === 0 && val.length > 0
             list.value = val
-            if(bool && formData && !formData.value.djlx){
+            if (bool && formData && !formData.value.djlx) {
                 formData.value.djlx = val[0].jgdm
             }
         }
@@ -71,6 +71,8 @@
         class="flex flex-row flex-row-center-between"
     >
         <tm-text
+            _class="mr-10"
+            :font-size="32"
             :color="formData?.djbh ? 'grey' : 'black'"
             :userInteractionEnabled="false"
             :label="activeValue || '请选择价格'"

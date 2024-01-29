@@ -2,8 +2,8 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-18 21:13:45
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-25 17:13:07
- * @FilePath: \tmui_cli_demo\src\pages\takeStock\takeStock.vue
+ * @LastEditTime: 2024-01-27 23:04:22
+ * @FilePath: \tmui_demo\src\pages\takeStock\takeStock.vue
  * @Description:
  *
  * Copyright (c) 2024 by 2483677516@qq.com, All Rights Reserved.
@@ -95,6 +95,12 @@
         () => reqGoodsData.data.value,
         (val) => {
             if (val?.status == 200) {
+                if(!val?.data?.Objzl){
+                    uni.showToast({
+                        title: "没有获取到商品信息",
+                        icon: "none",
+                    })
+                }
                 goodsData.value.Spmc = val?.data?.Objzl?.Spmc || ""
                 goodsData.value.Spdm = val?.data?.Objzl?.Spdm || ""
                 goodsSizeList.value = val?.data?.listcm || []
@@ -148,11 +154,19 @@
                 formData.value.djlx = val?.data?.djlx
                 count.value.number = val?.data?.sl
                 count.value.size = val?.data?.ks
+            } else {
+                if(count.value.number == 0 && count.value.size == 0){
+                    return
+                }
+                uni.showToast({
+                    icon: "error",
+                    title: reqData.data.value?.msg || "获取失败",
+                })
             }
         }
     )
     onShow(() => {
-        if(p.djbh){
+        if (p.djbh) {
             reqData.getData()
         }
     })

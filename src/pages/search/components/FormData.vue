@@ -2,8 +2,8 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-21 20:28:49
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-23 13:45:37
- * @FilePath: \tmui_cli_demo\src\pages\search\components\FormData.vue
+ * @LastEditTime: 2024-01-27 14:45:32
+ * @FilePath: \tmui_demo\src\pages\search\components\FormData.vue
  * @Description:
  *
  * Copyright (c) 2024 by 2483677516@qq.com, All Rights Reserved.
@@ -105,7 +105,16 @@
                 :haveArrow="false"
                 @click="queryStatus"
             >
-                <tm-text :label="statusText"></tm-text>
+                <tm-text
+                    :font-size="32"
+                    :label="statusText"
+                ></tm-text>
+                <tm-icon
+                    _class="ml-10"
+                    :userInteractionEnabled="false"
+                    :font-size="24"
+                    name="tmicon-angle-right"
+                ></tm-icon>
             </tm-dropdown>
         </tm-form-item>
     </tm-form>

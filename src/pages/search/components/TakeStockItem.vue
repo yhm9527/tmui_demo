@@ -148,10 +148,17 @@
                 ></tm-text>
             </tm-col>
             <tm-col align="start">
-                <tm-text
-                    :font-size="26"
-                    :label="`数量: ${props.data.sl}  状态: ${props.data.ztmc}`"
-                ></tm-text>
+                <view class="flex">
+                    <tm-text
+                        :font-size="26"
+                        :label="`数量: ${props.data.sl}`"
+                    ></tm-text>
+                    <tm-text
+                        _class="ml-30"
+                        :font-size="26"
+                        :label="`状态: ${props.data.ztmc}`"
+                    ></tm-text>
+                </view>
             </tm-col>
         </tm-row>
 
@@ -160,6 +167,7 @@
             v-if="props.data.zt == '0'"
         >
             <tm-button
+                :font-size="32"
                 label="提交"
                 size="small"
                 color="green"
@@ -167,12 +175,14 @@
                 @click="submit()"
             ></tm-button>
             <tm-button
+                :font-size="32"
                 label="修改"
                 size="small"
                 :margin="[0, 0]"
                 @click="goEdit()"
             ></tm-button>
             <tm-button
+                :font-size="32"
                 label="删除"
                 size="small"
                 color="red"

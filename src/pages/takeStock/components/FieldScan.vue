@@ -2,8 +2,8 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-21 16:23:31
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-25 17:14:05
- * @FilePath: \tmui_cli_demo\src\pages\takeStock\components\FieldScan.vue
+ * @LastEditTime: 2024-01-28 09:42:13
+ * @FilePath: \tmui_demo\src\pages\takeStock\components\FieldScan.vue
  * @Description:
  *
  * Copyright (c) 2024 by 2483677516@qq.com, All Rights Reserved.
@@ -19,22 +19,6 @@
     const value = ref("")
     const show = ref(false)
     const inputRef = ref<InstanceType<typeof TkInput>>()
-    const openScan = () => {
-        // #ifdef H5
-        value.value = "A13348514069"
-        confirm()
-        // #endif
-        show.value = true
-        nextTick(() => {
-            // 输入框聚焦
-            inputRef.value?.focus()
-        })
-    }
-
-    const closeScan = () => {
-        show.value = false
-    }
-
     let params = {
         djbh: "",
         uname: "",
@@ -47,13 +31,26 @@
         sl: 1,
     }
 
+    const state = ref(false)
+
+    watch(
+        () => state.value,
+        (newVal) => {
+            params.sl = newVal ? -1 : 1
+            console.log("params", params)
+        }
+    )
+
     const req = useFetch(config.API + "/Work/Savepd", {
         ...config.DEFAULT_FETCH_CONFIG,
         method: "POST",
         data: params,
     })
 
-    const confirm = () => {
+    const confirm = (val: string) => {
+        if(val){
+            value.value = val
+        }
         params.djbh = formData?.value.djbh as string
         params.ckdm = formData?.value.ckdm as string
         params.kwdm = formData?.value.kwdm as string
@@ -62,6 +59,8 @@
         params.djlx = formData?.value.djlx as string
         params.uname = formData?.value.uname as string
         params.sptm = value.value
+        console.log("params", params)
+
         req.getData()
     }
 
@@ -106,46 +105,23 @@
 <template>
     <tk-input
         ref="inputRef"
-        :style="{ border: '1rpx solid green', padding: '5rpx' }"
+        :style="{
+            width: '300rpx',
+            border: '1rpx solid green',
+            padding: '5rpx',
+        }"
         v-model="value"
         @confirm="confirm"
     />
-    <!-- <tm-button
-        size="small"
-        @click="openScan"
+    <tm-switch
+        v-model="state"
+        :defaultValue="state"
+        :margin="[10, 0, 0, 0]"
+        unCheckedColor="red"
         color="green"
-        label="开启扫码"
-    ></tm-button>
-    <tm-overlay
-        v-model:show="show"
-        contentAnimation
-        :overlayClick="false"
-    >
-        <view @click.stop="">
-            <tm-sheet
-                :width="500"
-                :height="500"
-            >
-                <tk-input
-                    v-if="show"
-                    ref="inputRef"
-                    :style="{ zIndex: '-1', position: 'absolute' }"
-                    :allowEdit="true"
-                    v-model="value"
-                    @confirm="confirm"
-                />
-                <tm-result
-                    color="green"
-                    status="success"
-                    :clickDisabled="false"
-                    title="已开启扫码"
-                    :sub-title="`数量${count?.number}/款数${count?.size}`"
-                    btnText="关闭扫码"
-                    @click="closeScan"
-                ></tm-result>
-            </tm-sheet>
-        </view>
-    </tm-overlay> -->
+        text
+        :label="['开', '关']"
+    ></tm-switch>
 </template>
 
 <style lang="scss" scoped></style>

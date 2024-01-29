@@ -2,8 +2,8 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-19 14:08:00
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-25 17:04:24
- * @FilePath: \tmui_cli_demo\src\pages\takeStock\components\FieldDate.vue
+ * @LastEditTime: 2024-01-27 14:02:51
+ * @FilePath: \tmui_demo\src\pages\takeStock\components\FieldDate.vue
  * @Description:
  *
  * Copyright (c) 2024 by 2483677516@qq.com, All Rights Reserved.
@@ -21,10 +21,12 @@
         }
         show.value = true
     }
-    onMounted(() => nextTick(() => {
-        const nowData = useDateFormat(new Date(), "YYYY-MM-DD").value
-        if(formData && !formData.value.rq) formData.value.rq = nowData
-    }))
+    onMounted(() =>
+        nextTick(() => {
+            const nowData = useDateFormat(new Date(), "YYYY-MM-DD").value
+            if (formData && !formData.value.rq) formData.value.rq = nowData
+        })
+    )
 </script>
 <script lang="ts">
     export default {
@@ -38,6 +40,8 @@
         v-if="formData"
     >
         <tm-text
+            _class="mr-10"
+            :font-size="32"
             :color="formData.djbh ? 'grey' : 'black'"
             :userInteractionEnabled="false"
             :label="formData.rq || '请选择日期'"

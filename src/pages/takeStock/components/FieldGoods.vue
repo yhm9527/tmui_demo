@@ -21,6 +21,7 @@
 </script>
 <template>
     <tm-input
+        style="width: 500rpx;"
         v-model="searchValue"
         placeholder="请输入商品"
         :searchWidth="120"

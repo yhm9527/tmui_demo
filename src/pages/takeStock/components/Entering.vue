@@ -137,8 +137,12 @@
         >
             <tm-col>
                 <view class="flex">
-                    <tm-text label="数量 :"></tm-text>
                     <tm-text
+                        :font-size="32"
+                        label="数量 :"
+                    ></tm-text>
+                    <tm-text
+                        :font-size="32"
                         _class="ml-10 text-weight-b"
                         :label="count?.number"
                         color="red"
@@ -147,8 +151,12 @@
             </tm-col>
             <tm-col>
                 <view class="flex">
-                    <tm-text label="款数 :"></tm-text>
                     <tm-text
+                        :font-size="32"
+                        label="款数 :"
+                    ></tm-text>
+                    <tm-text
+                        :font-size="32"
                         _class="ml-10 text-weight-b"
                         :label="count?.size"
                         color="red"
@@ -156,18 +164,26 @@
                 </view>
             </tm-col>
         </tm-row>
-        <tm-row v-if="count?.latestShop" :column="1">
+        <tm-row
+            v-if="count?.latestShop"
+            :column="1"
+        >
             <tm-col align="start">
-                <tm-text :label="count?.latestShop"></tm-text>
+                <tm-text
+                    :font-size="32"
+                    :label="count?.latestShop"
+                ></tm-text>
             </tm-col>
         </tm-row>
-        <tm-divider :margin="[0,10]" />
+        <tm-divider :margin="[0, 10]" />
         <!-- 商品,保存 -->
         <view class="flex flex-row-center-between">
             <tm-text
+                :font-size="32"
                 :label="`商品: ${goodsDetail?.goodsData.value.Spmc}`"
             ></tm-text>
             <tm-button
+                :font-size="32"
                 label="保存"
                 :margin="[0, 0]"
                 :disabled="!activeColor"
@@ -186,6 +202,7 @@
                 :key="i.Ysdm"
             >
                 <tm-button
+                    :font-size="32"
                     :color="activeColor == i.Ysdm ? 'blue' : 'grey'"
                     :label="i.Ysmc"
                     :margin="[0, 10, 0, 0]"
@@ -196,29 +213,45 @@
         </tm-row>
         <!-- 尺码,数量 -->
         <tm-row
+            :margin="[0, 10, 0, 0]"
             v-if="activeColor"
             :gutter="5"
-            :column="3"
+            :column="4"
         >
-            <tm-col>
-                <tm-text label="尺码"></tm-text>
+            <tm-col align="start">
+                <tm-text
+                    :font-size="32"
+                    label="尺码"
+                ></tm-text>
             </tm-col>
-            <tm-col>
-                <tm-text label="数量"></tm-text>
+            <tm-col
+                align="start"
+                :col="2"
+            >
+                <tm-text
+                    :font-size="32"
+                    label="数量"
+                ></tm-text>
             </tm-col>
         </tm-row>
         <tm-row
             v-if="activeColor"
             :gutter="5"
-            :column="3"
+            :column="4"
             v-for="i in goodsDetail?.goodsSizeList.value"
             :key="i.Cmdm"
             :margin="[0, 10, 0, 0]"
         >
-            <tm-col>
-                <tm-text :label="i.Cmmc"></tm-text>
+            <tm-col align="start">
+                <tm-text
+                    :font-size="32"
+                    :label="i.Cmmc"
+                ></tm-text>
             </tm-col>
-            <tm-col>
+            <tm-col
+                :col="2"
+                align="start"
+            >
                 <tm-stepper
                     :defaultValue="0"
                     v-model="tempList[getIdx(i.Cmdm, activeColor)].Sl"

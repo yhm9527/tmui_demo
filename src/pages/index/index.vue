@@ -2,8 +2,8 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-09 14:32:52
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-25 16:38:44
- * @FilePath: \tmui_cli_demo\src\pages\index\index.nvue
+ * @LastEditTime: 2024-01-27 14:52:01
+ * @FilePath: \tmui_demo\src\pages\index\index.vue
  * @Description:
  *
  * Copyright (c) 2024 by 2483677516@qq.com, All Rights Reserved.
@@ -26,7 +26,8 @@
             if(val?.status == 200){
                 if(val?.data?.length){
                    // todo 存储商店/仓库地址
-                   uni.setStorageSync('shopData',val?.data?.at(0))
+                   console.log('<<<shopData',val?.data[0]);
+                   uni.setStorageSync('shopData',val?.data[0])
                 }
             }
         }
@@ -49,16 +50,16 @@
         >
         </tm-navbar>
         <tm-sheet>
-			<tm-text :font-size="24" _class="text-weight-b" label="菜单"></tm-text>
+			<tm-text :font-size="32" _class="text-weight-b" label="菜单"></tm-text>
 			<tm-divider></tm-divider>
 			<tm-grid :width="638" :col="4">
 				<tm-grid-item :height="120" @click="goTakeStock">
-					<tm-icon name="tmicon-edit" :font-size="42"></tm-icon>
-					<tm-text _class="pt-10" :font-size="22" label="盘点"></tm-text>
+					<tm-icon name="tmicon-edit" :font-size="50"></tm-icon>
+					<tm-text _class="pt-10" :font-size="30" label="盘点"></tm-text>
 				</tm-grid-item>
 				<tm-grid-item :height="120" @click="goSearch">
-					<tm-icon name="tmicon-search-plus" :font-size="42"></tm-icon>
-					<tm-text _class="pt-10" :font-size="22" label="盘点查询"></tm-text>
+					<tm-icon name="tmicon-search-plus" :font-size="50"></tm-icon>
+					<tm-text _class="pt-10" :font-size="30" label="盘点查询"></tm-text>
 				</tm-grid-item>
 			</tm-grid>
 		</tm-sheet>

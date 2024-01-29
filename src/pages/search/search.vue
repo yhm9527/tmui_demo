@@ -2,7 +2,7 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-21 20:12:04
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-23 20:42:36
+ * @LastEditTime: 2024-01-27 14:42:41
  * @FilePath: \tmui_demo\src\pages\search\search.vue
  * @Description:
  *
@@ -112,7 +112,7 @@
                     @click="isFold = !isFold"
                 >
                     <tm-icon
-                        style="margin-left: 12rpx"
+                        _class="ml-10"
                         :font-size="24"
                         :name="
                             !isFold ? 'tmicon-angle-up' : 'tmicon-angle-down'
@@ -120,13 +120,15 @@
                         :color="isFold ? 'black' : 'green'"
                     ></tm-icon>
                     <tm-text
-                        style="margin-left: 12rpx"
+                        :font-size="32"
+                        _class="ml-10"
                         :color="isFold ? 'black' : 'green'"
                         :label="isFold ? '展开' : '收起'"
                     ></tm-text>
                 </view>
 
                 <tm-button
+                    :font-size="32"
                     label="查询"
                     size="small"
                     color="green"

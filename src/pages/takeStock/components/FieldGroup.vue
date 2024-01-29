@@ -2,8 +2,8 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-19 11:35:31
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-25 16:59:48
- * @FilePath: \tmui_cli_demo\src\pages\takeStock\components\FieldGroup.vue
+ * @LastEditTime: 2024-01-28 09:30:02
+ * @FilePath: \tmui_demo\src\pages\takeStock\components\FieldGroup.vue
  * @Description:
  *
  * Copyright (c) 2024 by 2483677516@qq.com, All Rights Reserved.
@@ -38,7 +38,7 @@
         (val) => {
             const bool = list.value.length === 0 && val.length > 0
             list.value = val
-            if(bool && formData && !formData.value.kwdm){
+            if (bool && formData && !formData.value.kwdm) {
                 formData.value.kwdm = val[0].Kwdm
             }
         }
@@ -53,7 +53,7 @@
     })
 
     const showDrawer = () => {
-        if(formData?.value.djbh){
+        if (formData?.value.djbh) {
             return
         }
         tempId.value = formData?.value.kwdm as string
@@ -80,6 +80,8 @@
         class="flex flex-row flex-row-center-between"
     >
         <tm-text
+            _class="mr-10"
+            :font-size="32"
             :color="formData?.djbh ? 'grey' : 'black'"
             :userInteractionEnabled="false"
             :label="activeValue || '请选择柜组'"

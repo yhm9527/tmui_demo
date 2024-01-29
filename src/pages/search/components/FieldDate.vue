@@ -2,8 +2,8 @@
  * @Author: leslie 2483677516@qq.com
  * @Date: 2024-01-21 20:38:59
  * @LastEditors: leslie 2483677516@qq.com
- * @LastEditTime: 2024-01-23 11:16:11
- * @FilePath: \tmui_cli_demo\src\pages\search\components\FieldDate.vue
+ * @LastEditTime: 2024-01-27 14:44:56
+ * @FilePath: \tmui_demo\src\pages\search\components\FieldDate.vue
  * @Description:
  *
  * Copyright (c) 2024 by 2483677516@qq.com, All Rights Reserved.
@@ -22,7 +22,7 @@
     watch(
         () => dateValue.value,
         (val) => {
-            if(!formData){
+            if (!formData) {
                 return
             }
             formData.value.Strq = val[0]
@@ -48,6 +48,7 @@
         class="flex flex-row flex-row-center-between"
     >
         <tm-text
+            :font-size="32"
             :userInteractionEnabled="false"
             :label="dateValue_str || '请选择日期范围'"
         ></tm-text>
